@@ -1,0 +1,134 @@
+\section{Lecture 1}
+\medskip
+
+\begin{defn}[Open Ball]
+    The \emph{open ball} of radius $\epsilon$ centered around $\mathbf{x}_0 \in \mathbb{R}^d$ is defined as
+    \[
+        B_{\epsilon}(\mathbf{x}_0) \vcentcolon= \left\{ \mathbf{x} \in \mathbb{R}^d \colon \norm{\mathbf{x} - \mathbf{x}_0} < \epsilon \right\}.
+    \]
+\end{defn}
+\begin{defn}[Closed Ball]
+    The \emph{closed ball} of radius $\epsilon$ centered around $\mathbf{x}_0 \in \mathbb{R}^d$ is defined as
+    \[
+        \overline{B}_{\epsilon}(\mathbf{x}_0) \vcentcolon= \left\{ \mathbf{x} \in \mathbb{R}^d \colon \norm{\mathbf{x} - \mathbf{x}_0} \leq \epsilon \right\}.
+    \]
+\end{defn}
+\begin{defn}[Open and Closed Sets]
+    A set $A \subset \mathbb{R}^d$ is said to be \emph{open} if for all $\mathbf{x} 
+    \in A$, there exists an $\epsilon > 0$ such that $B_{\epsilon}(\mathbf{x}) \subset A$. A set $A$ is said to be \emph{closed} if $A^{\mathsf{c}}$ is open.
+\end{defn}
+
+We have the following properties for open and closed sets.
+
+\begin{enumerate}
+    \item Let $\mathcal{I}$ be an arbitrary index set. If $A_{\alpha}$ is open for each $\alpha \in \mathcal{I}$, then 
+    \[
+        \bigcup_{\alpha \in \mathcal{I}} \, A_{\alpha}
+    \]
+    is open. In other words, open sets are closed under arbitrary unions.
+
+    \item Let $\mathcal{I}$ be a finite index set. If $A_{\alpha}$ is open for each $\alpha \in \mathcal{I}$, then 
+    \[
+        \bigcap_{\alpha \in \mathcal{I}} \, A_{\alpha}
+    \]
+    is open. In other words, open sets are closed under finte intersections.
+
+    \item Let $\mathcal{I}$ be an arbitrary index set. If $A_{\alpha}$ is closed for each $\alpha \in \mathcal{I}$, then 
+    \[
+        \bigcap_{\alpha \in \mathcal{I}} \, A_{\alpha}
+    \]
+    is closed. In other words, closed sets are closed under arbitrary intersections.
+
+    \item Let $\mathcal{I}$ be a finite index set. If $A_{\alpha}$ is closed for each $\alpha \in \mathcal{I}$, then 
+    \[
+        \bigcup_{\alpha \in \mathcal{I}} \, A_{\alpha}
+    \]
+    is closed. In other words, closed sets are closed under finite unions.
+\end{enumerate}
+
+\begin{defn}[Convergence of a sequence]
+    Let $\langle \mathbf{x}_n \rangle$ be a sequence in $\mathbb{R}^d$. Then, $\langle\mathbf{x}_n\rangle$ converges to $\mathbf{x}^*$ (written $\mathbf{x}_n \to \mathbf{x}^*$) if for all $\epsilon > 0$, there exists an $n_0 \in \mathbb{N}$ such that
+    \[
+        \mathbf{x}_n \in B_{\epsilon}(\mathbf{x}^*) \quad \forall n > n_0.
+    \]
+    Equivalently, $\norm{\mathbf{x}_n - \mathbf{x}^*} \to 0$.
+\end{defn}
+
+\begin{defn}[Closure]
+    Let $A \subset \mathbb{R}^d$. The \emph{closure} of $A$ (denoted $\overline{A}$) is the smallest closed set containing $A$. Equivalently, $\overline{A}$ is the intersection of all closed sets containing $A$.
+\end{defn}
+
+\begin{defn}[Interior]
+    Let $A \subset \mathbb{R}^d$. The \emph{interior} of $A$ (denoted $\interior{A}$) is the largest open set contained in $A$. Equivalently, $\interior{A}$ is the union of all open sets contained in $A$.
+\end{defn}
+Note that by definition, we have $\interior{A} \subset A \subset \overline{A}$.
+
+\begin{defn}[Boundary]
+    Let $A \subset \mathbb{R}^d$. The \emph{boundary} of $A$ is defined as
+    \[
+        \partial A \vcentcolon= \overline{A} \setminus \interior{A}.
+    \]
+\end{defn}
+Note that for a closed set, $\overline{A} = A$, and for an open set, $\interior{A} = A$. 
+
+\begin{prop}
+    A set $A \subset \mathbb{R}^d$ is closed if and only if
+    \[
+        \mathbf{x}_n  \to \mathbf{x}^*, \mathbf{x}_n \in A \forall n \implies \mathbf{x}^* \in A.
+    \]
+\end{prop}
+\begin{proof}
+    Let $A \subset \mathbb{R}^d$ be closed, $\mathbf{x}_n \in A$ for all $n$, and $\mathbf{x}_n \to \mathbf{x}^*$. Assume to the contrary that $\mathbf{x}^* \notin A$. Then, $\mathbf{x}^* \in A^{\mathsf{c}}$, which is open by assumption. Thus, $\exists \epsilon > 0$ such that $B_{\epsilon}(\mathbf{x}^*) \subset A^{\mathsf{c}}$. This implies that $\mathbf{x}_n \notin B_{\epsilon}(\mathbf{x}^*)$ for all $n$, and thus $\mathbf{x}_n \not\to \mathbf{x}^*$, a contradiction. To prove the converse, assume that $A$ is not closed. Thus, there exists a $\Tilde{\mathbf{x}} \in \partial A$ such that $\Tilde{\mathbf{x}} \notin A$. Then, for all $\epsilon > 0$, $B_{\epsilon}(\Tilde{\mathbf{x}}) \cap A \neq \emptyset$. Let $\epsilon_n \downarrow 0$ and let $\mathbf{x}_n \in B_{\epsilon_n}(\Tilde{\mathbf{x}}) \cap A$. Then, $\mathbf{x}_n \to \Tilde{\mathbf{x}} \notin A$, a contradiction.
+\end{proof}
+
+\begin{defn}[Limit Point]
+    Let $\langle \mathbf{x}_n \rangle$ be a sequence in $\mathbb{R}^d$. $\Tilde{\mathbf{x}}$ is a \emph{limit point} of $\langle \mathbf{x}_n \rangle$ if there exists a subsequence $\langle \mathbf{x}_{n_k} \rangle$ such that $\mathbf{x}_{n_k} \to \Tilde{\mathbf{x}}$.
+\end{defn}
+
+\begin{prop}
+    $\langle \mathbf{x}_n \rangle$ converges if and only if $\langle \mathbf{x}_n \rangle$ has a unique limit point.    
+\end{prop}
+
+\begin{defn}[Supremum and Infimum]
+    Let $A \subset \mathbb{R}$ be bounded. Then, 
+    \begin{align*}
+        \sup A &\vcentcolon= \text{ smallest } x \in \mathbb{R} \cup \{+\infty\} \text{ such that } y \in A \implies y \leq x, \\
+        \inf A &\vcentcolon= \text{ largest } x \in \mathbb{R} \cup \{-\infty\} \text{ such that } y \in A \implies y \geq x.
+    \end{align*}
+\end{defn}
+
+\begin{defn}[Cauchy Sequence]
+    A sequence $\langle \mathbf{x}_n \rangle$ is said to be \emph{Cauchy} if $\displaystyle\lim_{m,n \uparrow \infty} \norm{\mathbf{x}_m - \mathbf{x}_n} = 0$.
+\end{defn}
+
+\begin{prop}
+    Cauchy sequences are bounded.
+\end{prop}
+\begin{proof}
+    Let $\langle \mathbf{x}_n \rangle$ be a Cauchy sequene and let $\epsilon > 0$. Pick $N$ large enough such that 
+    \[
+        n,m > N \implies \norm{\mathbf{x}_m - \mathbf{x}_n} < \epsilon.
+    \]
+    We then have
+    \begin{align*}
+        &\mathbf{x}_n \in B_{\epsilon}(\mathbf{x}_m) \quad \forall n > N \\
+        &\implies \langle \mathbf{x}_n \colon n > N\rangle \text{ is bounded} \\
+        &\implies \langle \mathbf{x}_n \rangle \text{ is bounded.} \qedhere
+    \end{align*}
+\end{proof} 
+\begin{prop}
+    Cauchy sequences have at most one limit point.
+\end{prop}
+\begin{proof}
+    Suppose $\langle \mathbf{x}_n \rangle$ is a Cauchy sequence having two limit points, $\Tilde{\mathbf{x}}$ and $\overline{\mathbf{x}}$. Then, there exist subsequences $\mathbf{x}_{\Tilde{n}_k} \to \Tilde{\mathbf{x}}$ and $\mathbf{x}_{\overline{n}_l} \to \overline{\mathbf{x}}$. We then have
+    \[
+        \lim_{\Tilde{n}_k, \overline{n}_l \uparrow \infty} \norm{\mathbf{x}_{\Tilde{n}_k} - \mathbf{x}_{\overline{n}_l}} = 0 \implies \Tilde{\mathbf{x}} = \overline{\mathbf{x}}. \qedhere
+    \]
+\end{proof}
+\begin{defn}[Complete Space]
+    A metric space is \emph{complete} if every Cauchy sequence converges.
+\end{defn}
+
+\begin{thm}[Bolzano-Weierstrass Theorem]
+    Every bounded sequence has a convergent subsequence.
+\end{thm}
