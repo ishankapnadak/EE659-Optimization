@@ -47,7 +47,7 @@ We have the following properties for open and closed sets.
 \end{enumerate}
 
 \begin{defn}[Convergence of a sequence]
-    Let $\langle \mathbf{x}_n \rangle$ be a sequence in $\mathbb{R}^d$. Then, $\langle\mathbf{x}_n\rangle$ converges to $\mathbf{x}^*$ (written $\mathbf{x}_n \to \mathbf{x}^*$) if for all $\epsilon > 0$, there exists an $n_0 \in \mathbb{N}$ such that
+    Let $\left\{ \mathbf{x}_n \right\}$ be a sequence in $\mathbb{R}^d$. Then, $\left\{\mathbf{x}_n\right\}$ converges to $\mathbf{x}^*$ (written $\mathbf{x}_n \to \mathbf{x}^*$) if for all $\epsilon > 0$, there exists an $n_0 \in \mathbb{N}$ such that
     \[
         \mathbf{x}_n \in B_{\epsilon}(\mathbf{x}^*) \quad \forall n > n_0.
     \]
@@ -82,11 +82,11 @@ Note that for a closed set, $\overline{A} = A$, and for an open set, $\interior{
 \end{proof}
 
 \begin{defn}[Limit Point]
-    Let $\langle \mathbf{x}_n \rangle$ be a sequence in $\mathbb{R}^d$. $\Tilde{\mathbf{x}}$ is a \emph{limit point} of $\langle \mathbf{x}_n \rangle$ if there exists a subsequence $\langle \mathbf{x}_{n_k} \rangle$ such that $\mathbf{x}_{n_k} \to \Tilde{\mathbf{x}}$.
+    Let $\left\{ \mathbf{x}_n \right\}$ be a sequence in $\mathbb{R}^d$. $\Tilde{\mathbf{x}}$ is a \emph{limit point} of $\left\{ \mathbf{x}_n \right\}$ if there exists a subsequence $\left\{ \mathbf{x}_{n_k} \right\}$ such that $\mathbf{x}_{n_k} \to \Tilde{\mathbf{x}}$.
 \end{defn}
 
 \begin{prop}
-    $\langle \mathbf{x}_n \rangle$ converges if and only if $\langle \mathbf{x}_n \rangle$ has a unique limit point.    
+    $\left\{ \mathbf{x}_n \right\}$ converges if and only if $\left\{ \mathbf{x}_n \right\}$ has a unique limit point.    
 \end{prop}
 
 \begin{defn}[Supremum and Infimum]
@@ -98,29 +98,29 @@ Note that for a closed set, $\overline{A} = A$, and for an open set, $\interior{
 \end{defn}
 
 \begin{defn}[Cauchy Sequence]
-    A sequence $\langle \mathbf{x}_n \rangle$ is said to be \emph{Cauchy} if $\displaystyle\lim_{m,n \uparrow \infty} \norm{\mathbf{x}_m - \mathbf{x}_n} = 0$.
+    A sequence $\left\{ \mathbf{x}_n \right\}$ is said to be \emph{Cauchy} if $\displaystyle\lim_{m,n \uparrow \infty} \norm{\mathbf{x}_m - \mathbf{x}_n} = 0$.
 \end{defn}
 
 \begin{prop}
     Cauchy sequences are bounded.
 \end{prop}
 \begin{proof}
-    Let $\langle \mathbf{x}_n \rangle$ be a Cauchy sequene and let $\epsilon > 0$. Pick $N$ large enough such that 
+    Let $\left\{ \mathbf{x}_n \right\}$ be a Cauchy sequene and let $\epsilon > 0$. Pick $N$ large enough such that 
     \[
         n,m > N \implies \norm{\mathbf{x}_m - \mathbf{x}_n} < \epsilon.
     \]
     We then have
     \begin{align*}
         &\mathbf{x}_n \in B_{\epsilon}(\mathbf{x}_m) \quad \forall n > N \\
-        &\implies \langle \mathbf{x}_n \colon n > N\rangle \text{ is bounded} \\
-        &\implies \langle \mathbf{x}_n \rangle \text{ is bounded.} \qedhere
+        &\implies \left\{ \mathbf{x}_n \colon n > N\right\} \text{ is bounded} \\
+        &\implies \left\{ \mathbf{x}_n \right\} \text{ is bounded.} \qedhere
     \end{align*}
 \end{proof} 
 \begin{prop}
     Cauchy sequences have at most one limit point.
 \end{prop}
 \begin{proof}
-    Suppose $\langle \mathbf{x}_n \rangle$ is a Cauchy sequence having two limit points, $\Tilde{\mathbf{x}}$ and $\overline{\mathbf{x}}$. Then, there exist subsequences $\mathbf{x}_{\Tilde{n}_k} \to \Tilde{\mathbf{x}}$ and $\mathbf{x}_{\overline{n}_l} \to \overline{\mathbf{x}}$. We then have
+    Suppose $\left\{ \mathbf{x}_n \right\}$ is a Cauchy sequence having two limit points, $\Tilde{\mathbf{x}}$ and $\overline{\mathbf{x}}$. Then, there exist subsequences $\mathbf{x}_{\Tilde{n}_k} \to \Tilde{\mathbf{x}}$ and $\mathbf{x}_{\overline{n}_l} \to \overline{\mathbf{x}}$. We then have
     \[
         \lim_{\Tilde{n}_k, \overline{n}_l \uparrow \infty} \norm{\mathbf{x}_{\Tilde{n}_k} - \mathbf{x}_{\overline{n}_l}} = 0 \implies \Tilde{\mathbf{x}} = \overline{\mathbf{x}}. \qedhere
     \]
@@ -128,7 +128,3 @@ Note that for a closed set, $\overline{A} = A$, and for an open set, $\interior{
 \begin{defn}[Complete Space]
     A metric space is \emph{complete} if every Cauchy sequence converges.
 \end{defn}
-
-\begin{thm}[Bolzano-Weierstrass Theorem]
-    Every bounded sequence has a convergent subsequence.
-\end{thm}

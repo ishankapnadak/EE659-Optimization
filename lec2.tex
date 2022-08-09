@@ -1,0 +1,112 @@
+\section{Lecture 2}
+
+\begin{thm}[Bolzano-Weierstrass Theorem]
+    Every bounded sequence ]oin $\mathbb{R}^d$ has a convergent subsequence.
+\end{thm}
+\begin{proof}
+    Suppose $d = 1$. Since $\left\{ x_n \right\}$ is bounded, we have $x_n \in [a,b]$ for all $n$ where $a,b \in \mathbb{R}$ and $a < b$. The idea is to keep halving the interval and pick a half interval containing infinitely many points. For example, consider the two half intervals $[a, \frac{a+b}{2}]$ and $[\frac{a+b}{2}, b]$. Since $\left\{ x_n \right\}$ has infinitely many points, at least one of these two half intervals has infinitely many points. Call this half interval $[a_1, b_1]$ and repeat this argument again for $[a_1, b_1]$. This gives us a sequence $\left\{ (a_n, b_n) \right\}$ satisfying 
+    \begin{align*}
+        a_0 \leq a_1 \leq a_2 \leq \cdots b &\implies a_n \to a^* \\
+        b_0 \geq b_1 \geq b_2 \geq \cdots a &\implies b_n \to b^* \\
+    \end{align*}
+    where we define $a_0 \vcentcolon= a$ and $b_0 \vcentcolon= b$. Moreover, we have
+    \[
+        \abs{b_n - a_n} = \frac{b-a}{2^n} \to 0 \implies a^* = b^*.
+    \]
+    Since there are infinitely many $x_n$'s in $[a_k, b_k]$ for any $k$, pick $\Tilde{x}_k \in [a_k,b_k] \cap \{x_n\}$ such that $\Tilde{x}_k \neq \Tilde{x}_j$ for $j < k$. Thus, $\Tilde{x}_k \to a^* = b^*$. This can be generalised to $d > 1$ via induction and we leave this as an exercise to the reader.
+\end{proof}
+
+Note that the above argument does not generalise to infinite dimensions. For example, consider the complete orthonormal space
+\[
+    \mathcal{L}_2[0,T] \vcentcolon= \left\{ f \colon [0,T] \to \mathbb{R} \colon \int_0^T f^2(t) \, \D t < \infty \right\}
+\]
+with inner product
+\[
+    \langle f,g \rangle \vcentcolon= \int_0^T f(t) g(t) \, \D t.
+\]
+Consider an orthonormal basis $\{e_n\}$ satisfying 
+\[
+    \langle e_n, e_m \rangle = 
+    \begin{cases}
+        1 & \text{ if } n = m, \\
+        0 & \text{ if } n \neq m.
+    \end{cases}
+\]
+Note that $\norm{e_n - e_m} = \sqrt{2}$ whenever $n \neq m$ and thus $\{e_n\}$ has no convergent subsequence. 
+
+\begin{prop}
+    Let $f \colon C \subset \mathbb{R}^d \to \mathbb{R}$ be bounded from below. Let $\beta = \inf_{\mathbf{x} \in C} f(\mathbf{x})$. Then, $\exists \left\{ \mathbf{x}_n \right\} \in C$ such that $f(\mathbf{x}_n) \downarrow \beta$.  
+\end{prop}
+
+\begin{thm}[Weierstrass Theorem]
+    Let $C \subset \mathbb{R}^d$ be closed and bounded, and let $f \colon C \to \mathbb{R}$ be continuous. Then, $f$ attains its minimum and maximum. 
+\end{thm}
+\begin{proof}
+    Let $\left\{ \mathbf{x}_n \right\rangle \in C$ be such that $f(\mathbf{x}_n) \downarrow \beta \vcentcolon= \inf_{\mathbf{x} \in C} f(\mathbf{x})$. By Bolzano-Weierstrass, $\exists \left\{ \mathbf{x}_{n_k} \right\}$ such that $\mathbf{x}_{n_k} \to \mathbf{x}^*$. Since $C$ is closed, $\mathbf{x}^* \in C$. Since $f$ is continuous, $f(\mathbf{x}_{n_k}) \to f(\mathbf{x}^*) \implies f(\mathbf{x}^*) = \beta$. A similar argument holds for maximum.
+\end{proof}
+
+\begin{cor}
+    Let $C \subset \mathbb{R}^d$ be closed and let $f \colon C \to \mathbb{R}$ satisfy 
+    \[
+        \lim_{\norm{\mathbf{x}} \uparrow \infty} f(\mathbf{x}) = \infty.
+    \]
+    Then, $f$ attains its minimum on $C$. 
+\end{cor}
+\begin{proof}
+    Let $\left\{ \mathbf{x}_n \right\}$ be such that $f(\mathbf{x}_n) \downarrow \beta \vcentcolon= \inf_{\mathbf{x} \in C} f(\mathbf{x})$. Then, $\left\{ \mathbf{x}_n \right\}$ is bounded, since otherwise $\exists \left\{ \mathbf{x}_{n_k} \right\}$ such that $\norm{\mathbf{x}_{n_k}} \uparrow \infty \implies f(\mathbf{x}_{n_k}) \to \infty \neq \beta$. The previous argument now follows through.
+\end{proof}
+
+\begin{defn}[Limit Supremum and Limit Infimum]
+    Let $\left\{ x_n \right\} \in \mathbb{R}$. We define
+    \begin{align*}
+        \limsup_{n \uparrow \infty} x_n &\vcentcolon= \lim_{n \uparrow \infty} \, \sup_{m \geq n} x_m = \inf_{n \geq 1} \, \sup_{m \geq n} x_m \\
+        \liminf_{n \uparrow \infty} x_n &\vcentcolon= \lim_{n \uparrow \infty} \, \inf_{m \geq n} x_m = \sup_{n \geq 1} \, \inf_{m \geq n} x_m
+    \end{align*}
+    We sometimes also denote the limit supremum as $\overline{\lim} x_n$ and the limit infimum as $\underline{\lim} x_n$.
+\end{defn}
+
+Note that $\limsup$ and $\liminf$ are always well-defined if we allow $\{\pm\infty\}$ as possibilities. This is because $\sup_{m \geq n} x_m$ is a non-increasing sequence and thus must converge (possibly to $-\infty$). Similarly, $\inf_{m \geq n} x_m$ is a non-decreasing sequence and thus must converge (possibly to $+\infty$). We also note that
+
+\begin{enumerate}
+    \item $\displaystyle \limsup_{n \uparrow \infty} x_n \geq \liminf_{n \uparrow \infty} x_n$.
+
+    \item If $\displaystyle \limsup_{n \uparrow \infty} x_n = \liminf_{n \uparrow \infty} x_n = x^*$, then $x_n \to x^*$. 
+\end{enumerate}
+
+\begin{defn}[Lower and Upper Semicontinuous]
+    $f \colon C \subset \mathbb{R}^d \to \mathbb{R}$ is said to be lower semicontinuous (l.s.c) if whenever $\mathbf{x}_n \to \mathbf{x}^*$ in $C$, then $\displaystyle \liminf_{n \uparrow \infty} f(\mathbf{x}_n) \geq f(\mathbf{x}^*)$. 
+
+    $f \colon C \subset \mathbb{R}^d \to \mathbb{R}$ is said to be upper semicontinuous (u.s.c) if whenever $\mathbf{x}_n \to \mathbf{x}^*$ in $C$, then $\displaystyle \limsup_{n \uparrow \infty} f(\mathbf{x}_n) \leq f(\mathbf{x}^*)$. 
+\end{defn}
+
+\begin{cor}
+    If $f \colon C \subset \mathbb{R}^d \to \mathbb{R}$ is lower semicontinuous, $C$ is closed and bounded, then $f$ attains its minimum.
+\end{cor}
+\begin{proof}
+    Let $\left\{ \mathbf{x}_n \right\} \in C$ be such that $f(\mathbf{x}_n) \downarrow \beta \vcentcolon= \inf_{\mathbf{x} \in C} f(\mathbf{x})$. By Bolzano-Weierstrass, $\exists \left\{ \mathbf{x}_{n_k} \right\}$ such that $\mathbf{x}_{n_k} \to \mathbf{x}^*$. Since $C$ is closed, $\mathbf{x}^* \in C$. Then, 
+    \[
+        \beta = \lim_{n \uparrow \infty} f(\mathbf{x}_{n_k}) = \liminf_{n \uparrow \infty} f(\mathbf{x}_{n_k}) \geq f(\mathbf{x}^*) \geq \beta \implies f(\mathbf{x}^*) = \beta.
+    \]
+    Similarly, an upper semicontinuous function attains its maximum on a closed and bounded domain.
+\end{proof}
+
+\begin{prop}
+    Let $g \colon C \times D \to \mathbb{R}$ where $C \subset \mathbb{R}^n$, $D \subset \mathbb{R}^m$. Define $f \colon C \to \mathbb{R}$ as
+    \[
+        f(\mathbf{x}) \vcentcolon= \sup_{\mathbf{y} \in D} g(\mathbf{x}, \mathbf{y}) \quad (\text{resp. } \inf_{\mathbf{y} \in D} g(\mathbf{x}, \mathbf{y}))
+    \]
+    Suppose $f(\mathbf{x}) < \infty$ (resp. $f(\mathbf{x}) > -\infty$) for all $\mathbf{x} \in C$. If $g(\mathbf{x},\mathbf{y})$ is continuous in $\mathbf{x}$ for all $\mathbf{y} \in D$, then $f$ is lower semicontinuous (resp. upper semicontinuous).
+\end{prop}
+\begin{proof}
+    Let $\mathbf{x}_n \to \mathbf{x}^*$ in $C$. Then, 
+    \begin{align*}
+        \liminf_{n \uparrow \infty} f(\mathbf{x}_n) &\geq \liminf_{n \uparrow \infty} g(\mathbf{x}_n, \mathbf{y}) \, \forall \mathbf{y} \in D \\
+        &= \lim_{n \uparrow \infty} g(\mathbf{x}_n, \mathbf{y}) \\
+        &= g(\mathbf{x}^*, \mathbf{y}).
+    \end{align*}
+    Thus, 
+    \begin{align*}
+        \liminf_{n \uparrow \infty} f(\mathbf{x}_n) &\geq g(\mathbf{x}^*, \mathbf{y}) \quad \forall \mathbf{y} \in D \\
+        \implies \liminf_{n \uparrow \infty} f(\mathbf{x}_n) &\geq \sup_{\mathbf{y} \in D} g(\mathbf{x}^*, \mathbf{y}) = f(\mathbf{x}^*). \qedhere
+    \end{align*}
+\end{proof}
