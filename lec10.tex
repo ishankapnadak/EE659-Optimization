@@ -1,0 +1,60 @@
+\section{Lecture 10}
+
+Recall that optimal solutions to linear programs are extreme points of the feasible set. One way to optimize is then to simply search over extreme points. This is exactly what the \textbf{simplex algorithm} does, which we describe during the course of this lecture. We start at some initial extreme point and then check ``neighbors'' of that extreme point, by replacing some constraints with others. As this is a convex optimization problem, any local minimum is also a global minimum and we are done. 
+
+We recall the setting of the standard form LP:
+
+\[
+    \begin{cases}
+        \displaystyle\inf_{\mathbf{x} \in \mathbb{R}^d} \, \langle \mathbf{c}, \mathbf{x} \rangle \quad \text{subject to } \\
+        \mathbf{Ax} = \mathbf{b} \text{ and } \\
+        \mathbf{x} \geq \mathbf{0},
+    \end{cases}
+\]
+where $\mathbf{A} \in \mathbb{R}^{m \times d}$, $\mathbf{b} \in \mathbb{R}^m$, and $\mathbf{c} \in \mathbb{R}^d$. We can always take $m \leq d$ because if $m > d$, some of the constraints would be a linear combination of others and we can remove them. By the same logic, we may assume $\rank(\mathbf{A}) = m$. We then pick a set of indices $B \subseteq \{1, \ldots, d\}$ that correspond to $m$ linearly independent rows of $\mathbf{A}$. Now, we may write
+\[
+    \mathbf{A} = \begin{bmatrix}
+        \mathbf{A}_B & \mathbf{A}_N 
+    \end{bmatrix} \quad \text{and} \quad \mathbf{x} = \begin{bmatrix}
+        \mathbf{x}_B & \mathbf{x}_N
+    \end{bmatrix}
+\]
+where $N \vcentcolon= \{1, \ldots, n\} \setminus B$. We may then take $\mathbf{x}_N = \mathbf{0}$ and compute $\mathbf{x}_B = \mathbf{A}_B^{-1} \mathbf{b}$. This solution is called a \textit{basic feasible solution} (BFS). The simplex algorithm works as shown on the next page. 
+
+\begin{algorithm}[!ht]
+  \caption{Simplex Algorithm}\label{simplex}
+  \begin{algorithmic}[1]
+    \Function{Simplex}{$\mathbf{A} \in \mathbb{R}^{m \times d}, \mathbf{b} \in \mathbb{R}^m, \mathbf{c} \in \mathbb{R}^d$}
+
+    \While{True}
+    
+    \State Compute BFS $(\mathbf{x}_B, \mathbf{x}_N)$ with $\mathbf{x}_N = \mathbf{0}$, $\mathbf{x}_B = \mathbf{A}_B^{-1}\mathbf{b}$
+    
+    \State $\overline{\mathbf{c}}^{\top} \gets \mathbf{c}_N^{\top} - \mathbf{c}_B^{\top} \mathbf{A}_B^{-1} \mathbf{A}_N$
+
+    \If{$\overline{\mathbf{c}} \geq \mathbf{0}$}
+        \State STOP and return $(\mathbf{x}_B, \mathbf{x}_N)$
+    \EndIf
+
+    \State Select $j \in N$ such that $\overline{\mathbf{c}}_j < 0$
+
+    \State $\mathbf{d}_j \gets \mathbf{A}_B^{-1} \mathbf{a}_j$
+
+    \If{$\mathbf{d}_j \leq \mathbf{0}$}
+        \State STOP and return (LP unbounded)
+    \EndIf
+
+    \State $k \gets \displaystyle\argmin_{i \in B \colon d_{ji} > 0} \, \overline{b}_i / d_{ji}$
+
+    \State $B \gets (B \setminus \{k\}) \cup \{j\}$, $N \gets (N \setminus \{j\} \cup \{k\}$
+
+    \EndWhile
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
+
+\newpage
+
+Even though this algorithm terminates in a finite number of steps, it can have an exponential complexity ($d^m$) in the worst case. In practice, however, it often performs better than the polynomial time algorithm.
+
+Linear Programming often finds applications in everyday life. Some examples include the \href{https://towardsdatascience.com/operations-research-in-r-transportation-problem-1df59961b2ad}{Transportation problem}, the \href{https://optimization.mccormick.northwestern.edu/index.php/Network_flow_problem#:~:text=Network%20Flow%20Optimization%20problems%20form,viewed%20as%20minimizing%20transportation%20problems.}{Network Flow Problem}, and the \href{https://en.wikipedia.org/wiki/Chebyshev_center}{Chebyshev Center problem}.

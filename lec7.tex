@@ -1,0 +1,57 @@
+\section{Lecture 7}
+
+\begin{defn}[Epigraph]
+    Let $C \subseteq \mathbb{R}^d$ be convex and let $f \colon \mathbb{R}$ be a function. The \emph{epigraph} of $f$ is defined as the set of points on or above the graph of $f$. That is, 
+    \[
+        \epi(f) \vcentcolon= \left\{ (\mathbf{x}, y) \in \mathbb{R}^d \times \mathbb{R} \colon y \geq f(\mathbf{x}) \right\}.
+    \]
+\end{defn}
+
+\begin{lem}
+    $f$ is a convex function if and only if $\epi(f)$ is a convex set.
+\end{lem}
+\begin{thm}
+    Let $f \colon C \to \mathbb{R}$ be convex for a convex $C \subseteq \mathbb{R}^d$ with a non-empty interior. Then, $f$ is continuous at any $\mathbf{x}_0 \in \interior{C}$. 
+\end{thm}
+\begin{thm}
+    Let $f \colon \mathbb{R}^d \to \mathbb{R}$ be convex. Then, $f$ is differentiable almost everywhere
+\end{thm}
+
+\begin{defn}[Lipschitz and Locally Lipschitz]
+    A function $f \colon \mathbb{R}^d \to \mathbb{R}$ is said to be \emph{locally Lipschitz} if for any bounded open set $B \subseteq \mathbb{R}^d$, there exists a constant $K_B > 0$ (possibly depending on $B$) such that for all $\mathbf{x}, \mathbf{y} \in B$, we have
+    \[
+        \abs{f(\mathbf{x}) - f(\mathbf{y})} \leq K_B \cdot \norm{\mathbf{x} - \mathbf{y}}.
+    \]
+    If this constant $K_B$ does not depend on $B$, then $f$ is said to be \emph{Lipschitz}.
+\end{defn}
+
+\begin{thm}[Rademacher's Theorem]
+    A Lipschitz function is differentiable almost everywhere.
+\end{thm}
+
+\begin{thm}[Alexandrov's Theorem]
+    A convex function $f \colon \mathbb{R}^d \to \mathbb{R}$ is locally Lipschitz and twice differentiable almost everywhere.
+\end{thm}
+
+\begin{thm}
+    \begin{enumerate}
+        \item Let $f \colon C \to \mathbb{R}$ be convex, where $C \subseteq \mathbb{R}^d$ is convex and open. Then, for any $\mathbf{x} \in C$ where $f$ is differentiable, we have
+        \[
+            f(\mathbf{y}) \geq f(\mathbf{x}) +  \left\langle \nabla f(\mathbf{x}), \mathbf{y} - \mathbf{x} \right\rangle \quad \forall \mathbf{y} \in C.
+        \]
+        Conversely, if $f \colon C \to \mathbb{R}$ is continuously differentiable and the above holds for all $\mathbf{x}, \mathbf{y} \in C$, then $f$ is convex. 
+
+        \item If $f$ as defined above is twice continuously differentiable at $\mathbf{x} \in C$, then $\nabla^2f(\mathbf{x})$ is positive semi-definite. Conversely, if $\nabla^2f(\mathbf{x})$ is positive semi-definite in $C$, then $f$ must be convex. 
+    \end{enumerate}
+\end{thm}
+
+\begin{thm}
+    Let $f \colon \mathbb{R}^d \to \mathbb{R}$ be convex. Then, 
+    \[
+        f(\mathbf{x}) = \sup \left\{ g(\mathbf{x}) \colon g \text{ is affine and } g \leq f \right\}.
+    \]
+\end{thm}
+
+\begin{thm}
+    Let $C \subseteq \mathbb{R}^d$ be closed convex and bounded and $f \colon C \to \mathbb{R}$ be convex continuous. Then, $\epi(f)$ is a closed set. 
+\end{thm}

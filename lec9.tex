@@ -1,0 +1,112 @@
+\section{Lecture 9}
+
+We now turn our attention to \textbf{linear programming}, a specific yet useful instance of convex optimization where all functions involved are linear. A typical linear program in standard form is written as
+\begin{equation}
+    \label{LP}
+    \begin{cases}
+        \displaystyle\inf_{\mathbf{x} \in \mathbb{R}^d} \, \langle \mathbf{c}, \mathbf{x} \rangle \quad \text{subject to } \\
+        \mathbf{Ax} = \mathbf{b} \text{ and } \\
+        \mathbf{x} \geq \mathbf{0},
+    \end{cases} \tag{LP}
+\end{equation}
+where $\mathbf{A} \in \mathbb{R}^{m \times d}$, $\mathbf{b} \in \mathbb{R}^m$, and $\mathbf{c} \in \mathbb{R}^d$. Let $\mathcal{F} \vcentcolon= \left\{ \mathbb{R}^d_+ \colon \mathbf{Ax} = \mathbf{b} \right\}$ denote the feasible set. We let $\mathbf{a}_i$ denote the $i^{\text{th}}$ row of $\mathbf{A}$. The apparently more general problem obtained by replacing the constraint $\mathbf{Ax} = \mathbf{b}$ by the constraint $\mathbf{Ax} \leq \mathbf{b}$ can be reduced to standard form by introducing additional variables such as \textit{slack variables}. It suffices thus to restrict our analysis to the standard form.
+
+The following result is crucial in the simplex method, one of the major algorithms in linear programming. 
+
+\begin{thm}
+    If $\mathcal{F}$ has an extreme point and the linear programming problem \eqref{LP} has an optimal solution, then the linear program has an optimal solution which is an extreme point of $\mathcal{F}$.
+\end{thm}
+\begin{proof}
+    Let $S$ denote the set of optimal solutions to \eqref{LP}. It is easy to see that $S$ is closed and convex. Since $\mathcal{F}$ has an extreme point, Theorem 5.6 ensures that $\mathcal{F}$ (and hence $S$) has no lines. By the same theorem, $S$ now has an extreme point $\mathbf{x}^*$. Let $\mathbf{y}, \mathbf{z} \in \mathcal{F}$ be such that $\mathbf{x}^* = \alpha \mathbf{y} + (1-\alpha)\mathbf{z}$ for some $\alpha \in (0,1)$. Then, 
+    \[
+        \inf_{\mathbf{x} \in \mathcal{F}} \langle \mathbf{c}, \mathbf{x} \rangle = \langle \mathbf{c}, \mathbf{x}^* \rangle = \alpha \left\langle \mathbf{c}, \mathbf{y} \right\rangle + (1-\alpha) \left\langle \mathbf{c}, \mathbf{z} \right\rangle
+    \]
+    and thus $\langle \mathbf{c}, \mathbf{x}^* \rangle = \langle \mathbf{c}, \mathbf{y} \rangle = \langle \mathbf{c}, \mathbf{z} \rangle$, so that $\mathbf{y}, \mathbf{z} \in S$. Thus, $\mathbf{x}^* = \mathbf{y} = \mathbf{z}$ proving that $\mathbf{x}^*$ is an extreme point of $\mathcal{F}$. 
+\end{proof}
+
+Corresponding to the linear program in \eqref{LP}, which we call the \textit{Primal} problem, we have a \textit{Dual} problem given by
+
+\begin{equation}
+    \label{dual}
+    \begin{cases}
+        \displaystyle\sup_{\mathbf{y} \in \mathbb{R}^m} \, \langle \mathbf{y}, \mathbf{b} \rangle \quad \text{subject to } \\
+        \mathbf{y}^{\top}\mathbf{A} \leq \mathbf{c}.
+    \end{cases} \tag{Dual}
+\end{equation}
+
+Define
+\begin{align*}
+    \alpha &\vcentcolon= \inf_{\mathbf{x} \in \mathcal{F}} \, \left\langle \mathbf{c}, \mathbf{x} \right\rangle \\
+    \beta &\vcentcolon= \sup_{\mathbf{y}^{\top}\mathbf{A} \, \leq \, \mathbf{c}} \, \left\langle \mathbf{y}, \mathbf{b} \right\rangle
+\end{align*}
+
+\begin{thm}[Weak Duality]
+    Let $\mathbf{x}$ be a feasible solution to the Primal and let $\mathbf{y}$ be a feasible solution to the Dual. We have
+    \[
+        \left\langle \mathbf{y}, \mathbf{b} \right\rangle \leq \left\langle \mathbf{c}, \mathbf{x} \right\rangle.
+    \]
+    In particular, $\beta \leq \alpha$ always holds. 
+\end{thm}
+\begin{proof}
+    We have $\mathbf{Ax} = \mathbf{b}$ and $\mathbf{y}^{\top}\mathbf{A} \leq \mathbf{c}$. Thus,
+    \[
+        \left\langle \mathbf{y}, \mathbf{b} \right\rangle = \left\langle \mathbf{y}, \mathbf{Ax} \right\rangle \leq \left\langle \mathbf{y}^{\top}\mathbf{A}, \mathbf{x} \right\rangle \leq \left\langle \mathbf{c}, \mathbf{x} \right\rangle. \qedhere
+    \]
+\end{proof}
+
+From weak duality, we see that if the primal is unbounded ($\alpha = -\infty$), then the dual is infeasible ($\beta = -\infty$). Similarly, if the dual is unbounded ($\beta = \infty$), then the primal is infeasible ($\alpha = \infty$). 
+
+\begin{thm}[Strong Duality]
+    If either of the Primal or Dual is feasible and bounded, then $\beta = \alpha$. 
+\end{thm}
+\begin{proof}
+    If the Primal is feasible and bounded, then the Dual is feasible. Similarly, if the Dual is feasible and bounded, then the Primal is feasible. Now, consider
+    \[
+        \mathcal{K} = \left\{ \Tilde{\mathbf{A}}\mathbf{x} \colon \mathbf{x} \in \mathbb{R}^d, \mathbf{x} \geq \mathbf{0} \right\}
+    \]
+    where
+    \[
+        \Tilde{\mathbf{A}} \vcentcolon= \begin{bmatrix}
+            \mathbf{A} \\ \mathbf{c}^{\top} 
+        \end{bmatrix} \in \mathbb{R}^{(m+1) \times d}.
+    \]
+    Then, for any $\epsilon > 0$, we have $\begin{pmatrix}
+        \mathbf{b} \\ \alpha - \epsilon
+    \end{pmatrix} \notin \mathcal{K}$. Using Theorem 5.3 (Separation Theorem), we can find $\mathbf{y}^{\prime} \in \mathbb{R}^m, \eta \in \mathbb{R}$ such that
+    \[
+        \left\langle \mathbf{y}^{\prime}, \mathbf{b} \right\rangle + \eta(\alpha - \epsilon) > 0 \geq \left\langle \mathbf{y}^{\prime}, \mathbf{Ax} \right\rangle + \eta \left\langle \mathbf{c}, \mathbf{x} \right\rangle
+    \]
+    for every $\epsilon > 0$ and $\mathbf{x} \geq \mathbf{0}$. By the feasibility of the primal, there exists $\mathbf{x}$ satisfying $\mathbf{Ax} = \mathbf{b}$, and thus $\eta \neq 0$. At the same time, since $\epsilon$ is arbitrary, we must have $\eta < 0$. Replacing $\mathbf{y}^{\prime}$ by $\mathbf{y} \vcentcolon= -\frac{1}{\eta} \mathbf{y}^{\prime}$, we obtain
+    \[
+        \left\langle \mathbf{y}, \mathbf{b} \right\rangle > \alpha - \epsilon
+    \]
+    for every $\epsilon > 0$. Similarly, for every $\mathbf{x} \geq \mathbf{0}$, we have
+    \[
+        \left\langle \mathbf{y}, \mathbf{Ax} \right\rangle \leq \left\langle \mathbf{c}, \mathbf{x} \right\rangle. 
+    \]
+    Since $\mathbf{x} \geq \mathbf{0}$ is arbitrary, we must have $\mathbf{y}^{\top}\mathbf{A} \leq \mathbf{c}^{\top}$. Thus, $\mathbf{y}$ is feasible for Dual and hence $\beta \leq \alpha - \epsilon$ for every $\epsilon > 0$ so that $\beta \geq \alpha$. Coupled with Weak Duality, this gives us $\beta = \alpha$. 
+\end{proof} 
+
+One standard application of strong duality is in Game Theory, where it is most commonly used to prove \href{https://en.wikipedia.org/wiki/Minimax_theorem}{von Neumann's Minimax Theorem} for two-player zero-sum games. 
+
+We state two further results regarding the solvability of linear systems without proof. 
+
+\begin{thm}[Gauss]
+    Let $\mathbf{A} \in \mathbb{R}^{m \times d}$ and $\mathbf{b} \in \mathbb{R}^m$. Then exactly one of the following holds. 
+
+    \begin{enumerate}
+        \item There exists an $\mathbf{x} \in \mathbb{R}^d$ such that $\mathbf{Ax} = \mathbf{b}$.
+        \item There exists a $\mathbf{y} \in \mathbb{R}^m$ such that $\mathbf{y}^{\top}\mathbf{A} = \mathbf{0}$, $\mathbf{y}^{\top}\mathbf{b} \neq 0$.
+    \end{enumerate}
+\end{thm}
+
+\begin{lem}[Farkas' Lemma]
+    Let $\mathbf{A} \in \mathbb{R}^{m \times d}$ and $\mathbf{b} \in \mathbb{R}^m$. Then exactly one of the following holds. 
+
+    \begin{enumerate}
+        \item There exists an $\mathbf{x} \in \mathbb{R}^d$ such that $\mathbf{Ax} = \mathbf{b}$ with $\mathbf{x} \geq \mathbf{0}$.
+        \item There exists a $\mathbf{y} \in \mathbb{R}^m$ such that $\mathbf{y}^{\top}\mathbf{A} \leq \mathbf{0}$, $\mathbf{y}^{\top}\mathbf{b} > 0$.
+    \end{enumerate}
+\end{lem}
+
+Further, these two results are equivalent. 

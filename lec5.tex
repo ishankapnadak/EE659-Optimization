@@ -1,0 +1,71 @@
+\section{Lecture 5}
+
+\begin{defn}
+    A \emph{hyperplane} with normal vector $\mathbf{n}$ and passing through point $\mathbf{x}_0 \in \mathbb{R}^d$ is defined as the set
+    \[
+        \mathcal{H} \vcentcolon= \left\{ \mathbf{x} \in \mathbb{R}^d \colon \left\langle \mathbf{x} - \mathbf{x}_0, \mathbf{n} \right\rangle = 0 \right\}.
+    \]
+    $\mathcal{H}$ also defines two \emph{closed half spaces}
+    \begin{align*}
+        L_{\mathcal{H}} &\vcentcolon= \left\{ \mathbf{x} \in \mathbb{R}^d \colon \left\langle \mathbf{x} - \mathbf{x}_0, \mathbf{n} \right\rangle \leq 0 \right\} \\
+        U_{\mathcal{H}} &\vcentcolon= \left\{ \mathbf{x} \in \mathbb{R}^d \colon \left\langle \mathbf{x} - \mathbf{x}_0, \mathbf{n} \right\rangle \geq 0 \right\}
+    \end{align*}
+    that intersect in $\mathcal{H}$.
+\end{defn}
+
+\begin{defn}
+    Let $A,B \subseteq \mathbb{R}^d$ and let $\mathcal{H}$ be a hyperplane in $\mathbb{R}^d$. We say that $\mathcal{H}$ \emph{separates} $A,B$ if $A \subseteq L_{\mathcal{H}}$ and $B \subseteq U_{\mathcal{H}}$ or vice-versa. 
+\end{defn}
+
+\begin{thm}
+    \begin{enumerate}
+        \item If $C \subseteq \mathbb{R}^d$ is closed convex and $\mathbf{x} \notin C$, then there exists a hyperplane separating the two. 
+        \item If $C,D \subseteq \mathbb{R}^d$ are disjoint closed convex sets, then there exists a hyperplane separating the two. 
+    \end{enumerate}
+\end{thm}
+\begin{proof}
+    For the first part, it suffices to take $\mathbf{n} \vcentcolon= (\mathbf{x} - \mathbf{x}^*)/\norm{\mathbf{x} - \mathbf{x}^*}$ and $\mathbf{x}_0 = \mathbf{x}^*$. We leave the proof for this part as an exercise. (Hint: Use Theorem 4.7).
+\end{proof}
+
+\begin{defn}[Extreme Point]
+    Let $C \subseteq \mathbb{R}^d$ be convex. A point $\mathbf{x} \in C$ is said to be an \emph{extreme point} of $C$ if it cannot be expressed as a strict convex combination of two distinct points in $C$. That is,
+    \[
+        \mathbf{x} = \alpha \mathbf{y} + (1-\alpha) \mathbf{z}, \, \mathbf{y}, \mathbf{z} \in C, \, \alpha \in (0,1) \implies \mathbf{x} = \mathbf{y} = \mathbf{z}.
+    \]
+\end{defn}
+Clearly, an extreme point $\mathbf{x} \in \partial C$ because if not, there is an open ball centered at $\mathbf{x}$ completely contained in $C$. 
+
+\begin{thm}
+    A closed bounded convex set $C \subseteq \mathbb{R}^d$ has an extreme point. 
+\end{thm}
+\begin{proof}
+    Let $\mathbf{l}_1, \ldots, \mathbf{l}_d$ be linearly independent vectors in $\mathbb{R}^d$. Let $C_0 \vcentcolon= C$ and for $1 \leq i < d$, recursively define
+    \[
+        C_{i+1} \vcentcolon= \left\{ \mathbf{x} \in C_i \colon \left\langle \mathbf{l}_i, \mathbf{x} \right\rangle = \min_{\mathbf{y} \in C_i} \left\langle \mathbf{l}_i, \mathbf{y} \right\rangle \right\}.
+    \]
+    Then, $C_{i+1} \subseteq C_i$ for all $i$, and $C_i$'s are closed bounded and convex. If $\mathbf{x}, \mathbf{y} \in C_d$, then $\langle \mathbf{l}_i, \mathbf{x}\rangle = \langle \mathbf{l}_i, \mathbf{y} \rangle$ for all $i$, implying that $\mathbf{x} = \mathbf{y}$ by our choice of $\mathbf{l}_i$'s. Thus, $C_d = \{ \mathbf{x}^* \}$ for some $\mathbf{x}^* \in C$. We claim that $\mathbf{x}^*$ is an extreme point of $C$. If not, we may choose $\mathbf{y} \neq \mathbf{z}$, both in $C$, such that $\mathbf{x}^* = \frac{\mathbf{y} + \mathbf{z}}{2}$. Then,
+    \[
+        \left\langle \mathbf{l}_1, \mathbf{x} \right\rangle + \frac{1}{2}\left\langle \mathbf{l}_1, \mathbf{y} \right\rangle + \frac{1}{2}\left\langle \mathbf{l}_1, \mathbf{z} \right\rangle
+    \]
+    implying that $\left\langle \mathbf{l}_1, \mathbf{x} \right\rangle = \left\langle \mathbf{l}_1, \mathbf{y} \right\rangle = \left\langle \mathbf{l}_1, \mathbf{z} \right\rangle$, and thus $\mathbf{y}, \mathbf{z} \in C_1$. Repeating this argument, we conclude that $\mathbf{y}, \mathbf{z} \in C_i$ for all $i$, and in particular $\mathbf{y}, \mathbf{z} = C_d = \{ \mathbf{x}^* \}$. The claim thus follows. 
+\end{proof}
+
+\begin{thm}
+    A closed and convex set has an extreme point if and only if it contains no lines. 
+\end{thm}
+\begin{proof}
+    Let $C \subseteq \mathbb{R}^d$ be closed and convex. Suppose $C$ contains a line $\left\{ \overline{\mathbf{x}} + t\mathbf{h} \colon t \in \mathbb{R} \right\}$ passing through $\overline{\mathbf{x}} \in \mathbb{R}^d$ in the direction $\mathbf{h} \in \mathbb{R}^d$. Then, $\mathbf{x} + t\mathbf{h} \in C$ for any $t \in \mathbb{R}, \mathbf{x} \in C$. Indeed, 
+    \[
+        \mathbf{x} + t\mathbf{h} = \lim_{\epsilon \to 0} \left[ (1-\epsilon) \mathbf{x} + \epsilon \left( \overline{\mathbf{x}} + \frac{t}{\epsilon} \mathbf{h} \right) \right] \in C
+    \]
+    since $C$ is closed and convex. Thus, no point of $C$ can be an extreme point. 
+
+    Conversely, assume that $C$ has no lines. We use induction to prove that $C$ has an extreme point. If $C$ is a closed, convex subset of $\mathbb{R}$ having no lines, then $C$ is a closed and bounded interval and thus has an extreme point. Now, assume the statement holds for dimensions strictly less than $d$, and consider a closed convex set $C \subseteq \mathbb{R}^d$. Since $C$ has no lines, $C$ has a boundary point, say $\overline{\mathbf{x}}$. Let $\mathcal{H}$ be the supporting hyperplane of $C$ at $\overline{\mathbf{x}}$. Now, $\mathcal{H} \cap C$ lies in $(d-1)$-dimensional space. Since it contains no lines, it has an extreme point by the induction hypothesis. It is easy to see that this extreme point is also an extreme point of $C$. (In fact, we shall prove this in a later lecture). 
+\end{proof}
+
+\begin{thm}[Krein-Milman Theorem in Finite Dimensions]
+    A closed bounded convex set is the closed convex hull of its extreme points.
+\end{thm}
+\begin{proof}
+    Let $C \subseteq \mathbb{R}^d$ be closed, convex, and bounded, and let $\mathcal{E}(C)$ denote the set of its extreme points. It is clear that $\cco(\mathcal{E}(C)) \subseteq C$. Suppose $\cco(\mathcal{E}(C)) \neq C$, then $\exists \mathbf{x}^* \in \cco(\mathcal{E}(C)) \setminus C$. We can construct a support hyperplane $\mathcal{H} = \left\{ \mathbf{x} \colon \left\langle \mathbf{x} - \mathbf{x}_0, \mathbf{n} \right\rangle = 0 \right\}$ of $\cco(\mathcal{E}(C))$ such that $\mathcal{E}(C) \subseteq L_{\mathcal{H}}$ and $\mathbf{x}^* \in \interior{U_{\mathcal{H}}}$. Then, $\langle \mathbf{x}^* - \mathbf{x}_0, \mathbf{n} \rangle > 0$. As in the proof of Theorem 5.5, take $\mathbf{l}_1 \vcentcolon= -\mathbf{n}$ to obtain $\hat{\mathbf{x}} \in C$ with $\langle \hat{\mathbf{x}^*} - \mathbf{x}_0, \mathbf{n} \rangle > 0$, a contradiction. The claim follows. 
+\end{proof}

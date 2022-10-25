@@ -1,0 +1,101 @@
+\section{Lecture 4}
+
+\begin{thm}[Envelope Theorem / Danskin's Theorem]
+    Suppose $C \subseteq \mathbb{R}^d$ is open and $D \subseteq \mathbb{R}^m$ is closed and bounded. Suppose that $f \colon C \times D \to \mathbb{R}$ is continuous and its partial gradient with respect to $\mathbf{x} \in C$, denoted as
+    \[
+        \nabla^{\mathbf{x}} f(\mathbf{x}, \mathbf{y}) \vcentcolon= \begin{bmatrix}
+            \frac{\partial f}{\partial x_1}(\mathbf{x}) & \cdots & \frac{\partial f}{\partial x_d}(\mathbf{x})
+        \end{bmatrix} \in \mathbb{R}^d
+    \]
+    is continuous. Let $g(\mathbf{x}) \vcentcolon= \max_{\mathbf{y} \in D} \, f(\mathbf{x}, \mathbf{y})$, where the maximum is attained on a non-empty closed and bounded set $M(\mathbf{x}) \subseteq D$. Then, $g \colon \mathbb{R}^d \to \mathbb{R}$ has a directional derivative in every direction, given by
+    \[
+        g^{\prime}(\mathbf{x} ; \mathbf{n}) = \max_{\mathbf{y} \in M(\mathbf{x})} \, \left\langle \nabla^{\mathbf{x}} f(\mathbf{x}, \mathbf{y}), \mathbf{n} \right\rangle
+    \]
+    for every unit vector $\mathbf{n} \in \mathbb{R}^d$. 
+\end{thm}
+
+\begin{defn}[Convex Set]
+    A set $C \subseteq \mathbb{R}^d$ is said to be \emph{convex} if for all $\mathbf{x}, \mathbf{y} \in C$, we have
+    \[
+        \alpha\mathbf{x} + (1-\alpha)\mathbf{y} \in C \quad \forall \alpha \in [0,1].
+    \]
+\end{defn}
+
+\begin{prop}
+    A set $C \subseteq \mathbb{R}^d$ is convex iff $\forall \mathbf{x}_1, \ldots \mathbf{x}_n \in C$, $n > 0$ and $\alpha_i > 0$ with $\sum_i \alpha_i = 1$, we have
+    \[
+        \sum_{i=1}^n \alpha_i \mathbf{x}_i \in C.
+    \]
+\end{prop}
+\begin{proof}
+    $(\impliedby)$ is clear by taking $n = 2$. For $(\implies)$, we already know that the result holds for $n = 2$, by definition. Suppose the statement holds for some $n \geq 2$. Then, 
+    \[
+        \sum_{i=1}^{n+1} \alpha_i \mathbf{x}_i = \alpha_1 \mathbf{x}_1 + (1-\alpha_1) \cdot \underbrace{\sum_{i=2}^{n+1} \frac{\alpha_i}{1-\alpha_1} \mathbf{x}_i}_{\in C} \in C,
+    \]
+    where the latter point is in $C$ by the induction hypothesis. The result then follows from induction.
+\end{proof}
+Note that if $C$ is closed, it suffices to check that $\mathbf{x}, \mathbf{y} \in C \implies \frac{\mathbf{x} + \mathbf{y}}{2} \in C$. 
+
+We list out some properties of convex sets below. 
+
+\begin{enumerate}
+    \item Convex sets are connected.
+    \item Intersection of an arbitrary family of convex sets is convex.
+    \item Union of two convex sets need not be convex.
+    \item Interior and closure of convex sets are convex.
+    \item Image of a convex set under an affine map is convex.
+\end{enumerate}
+
+\begin{defn}[Convex Hull]
+    Let $A \subseteq \mathbb{R}^d$. The \emph{convex hull} of $A$, denoted $\co(A)$, is the smallest convex set containing $A$, or equivalently, the intersection of all convex sets containing $A$, or equivalently, the set of convex combinations of all points in $A$. 
+\end{defn}
+
+\begin{defn}[Closed Convex Hull]
+    Let $A \subseteq \mathbb{R}^d$. The \emph{closed convex hull} of $A$, denoted $\cco(A)$, is the smallest closed convex set containing $A$, or equivalently, the intersection of all closed convex sets containing $A$.
+\end{defn}
+
+\begin{thm}
+    Let $C \subseteq \mathbb{R}^d$ be closed and convex and let $\mathbf{x} \notin C$. Then, there exists a unique $\mathbf{x}^* \in C$ such that
+    \[
+        \norm{\mathbf{x} - \mathbf{x}^*} = \min_{\mathbf{y} \in C} \, \norm{\mathbf{x} - \mathbf{y}}.
+    \]
+\end{thm}
+
+\begin{proof}
+    Note that $\mathbf{y} \mapsto \norm{\mathbf{x} - \mathbf{y}}$ is a continuous map. By triangle inequality, $\norm{\mathbf{x} - \mathbf{y}} \geq \norm{\mathbf{y}} - \norm{\mathbf{x}}$, and thus
+    \[
+        \lim_{\norm{\mathbf{y}} \uparrow \infty} \norm{\mathbf{x} - \mathbf{y}} = \infty.
+    \]
+    The existence of a minimizer $\mathbf{x}^*$ now follows from Corollary 2.1 of the Weierstrass Theorem. Suppose $\hat{\mathbf{x}} \neq \mathbf{x}^*$ is another minimizer. Then, the triangle formed by $(\mathbf{x}, \mathbf{x}^*, \hat{\mathbf{x}})$ is an isosceles triangle with line segment $(\mathbf{x}^*, \hat{\mathbf{x}})$ as its base. Moreover, this triangle lies completely in $C$ by convexity. By elementary geometry, it is easy to see that the midpoint $\frac{\mathbf{x}^* + \hat{\mathbf{x}}}{2}$ is at a strictly smaller distance from $\mathbf{x}$ than $\mathbf{x}^*, \hat{\mathbf{x}}$, a contradiction. Thus, $\mathbf{x}^*$ is the unique minimizer of $\norm{\mathbf{y} - \mathbf{x}}$ over $C$. 
+\end{proof}
+
+The above $\mathbf{x}^*$ is called the \emph{projection} of $\mathbf{x}$ onto $C$. This theorem immediately adapts to a more general setting, as follows.
+
+\begin{thm}
+    Let $C,D \subseteq \mathbb{R}^d$ be disjoint closed convex sets with $C$ bounded. Then, there exist $\mathbf{x}^* \in C$, $\mathbf{y}^* \in D$ such that
+    \[
+        0 < \norm{\mathbf{x}^* - \mathbf{y}^*} = \min_{\mathbf{x} \in C , \mathbf{y} \in D} \, \norm{\mathbf{x} - \mathbf{y}}.
+    \]
+\end{thm}
+\begin{proof}
+    Consider the map $(\mathbf{x}, \mathbf{y}) \in C \times D \mapsto \norm{\mathbf{x} - \mathbf{y}}$, which is clearly continuous. If $D$ is also bounded, the claim is immediate from Weierstrass Theorem (Theorem 2.3). If not, we have
+    \[
+        \norm{(\mathbf{x}, \mathbf{y})} \uparrow \infty \iff \norm{\mathbf{y}} \uparrow \infty,
+    \]
+    since $C$ is bounded. Thus, $\norm{(\mathbf{x}, \mathbf{y})} \uparrow \infty \implies \norm{\mathbf{x} - \mathbf{y}} \uparrow \infty$. The existence of a minimizing pair $(\mathbf{x}^*, \mathbf{y}^*)$ again follows from Corollary 2.1 of the Weierstrass Theorem. Moreover, since $C,D$ are disjoint, $\norm{\mathbf{x}^* - \mathbf{y}^*} > 0$.
+\end{proof}
+Note that no uniqueness can be claimed. (Hint: imagine two disjoint rectangles in $\mathbb{R}^2$ with sides parallel to each other). Next, we characterize the projection of $\mathbf{x}$ onto $C$.
+
+\begin{thm}
+    Let $C \subseteq \mathbb{R}^d$ be closed convex and let $\mathbf{x} \notin C$. Then,
+    \[
+        \mathbf{x}^* = \argmin_{\mathbf{y} \in C} \norm{\mathbf{x} - \mathbf{y}}
+    \]
+    if and only if
+    \[
+        \left\langle \mathbf{y} - \mathbf{x}^*, \mathbf{x} - \mathbf{x}^* \right\rangle \leq 0.
+    \]
+\end{thm}
+\begin{proof}
+    The proof is left as an exercise. 
+\end{proof}

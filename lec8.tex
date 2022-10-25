@@ -1,0 +1,108 @@
+\section{Lecture 8}
+
+The next result we prove is the Lagrange multiplier rule, the crown jewel of convex optimization. We look at minimizing a continuous convex function $f \colon C \to \mathbb{R}$ defined on a closed convex set $C \subseteq \mathbb{R}^d$, subject to constraints
+\[
+    g_i(\mathbf{x}) \leq 0 , \quad 1 \leq i \leq m,
+\]
+where $g_i \colon C \to \mathbb{R}$ is continuous for each $i$. In particular, the set of `feasible' points
+\[
+    \Tilde{C} \vcentcolon= C \cap \left( \bigcap_{i=1}^m \left\{ \mathbf{x} \in C \colon g_i(\mathbf{x}) \leq 0 \right\} \right)
+\]
+is a closed, convex set. We may compactly write the constraints as $g(\mathbf{x}) \leq \mathbf{0}$ where
+\[
+    g(\mathbf{x}) \vcentcolon= \begin{bmatrix}
+        g_1(\mathbf{x}) \\ \vdots \\ g_m(\mathbf{x})
+    \end{bmatrix} \in \mathbb{R}^m,
+\]
+and the inequalities are component-wise. Consider the set
+\[
+    D \vcentcolon= \left\{ (\mathbf{y}, z) \in \mathbb{R}^m \times \mathbb{R} \colon \exists \, \mathbf{x} \in \mathbb{R}^d \text{ such that } y \geq g(\mathbf{x}) \text{ and } z \geq f(\mathbf{x}) \right\}.
+\]
+It is easy to see that $D$ is convex. (Why?) 
+
+\begin{lem}
+    Define $w \colon \mathbb{R}^m \to \mathbb{R}$ as $w(\mathbf{z}) \vcentcolon= \inf_{\mathbf{x} \in C} \, \left\{ f(\mathbf{x}) \colon g(\mathbf{x}) \leq \mathbf{z} \right\}$. Then, $w$ is convex. 
+\end{lem}
+\begin{proof}
+    Let $\alpha \in [0,1]$. Then, for $\mathbf{z}_1, \mathbf{z}_2 \in \mathbb{R}^m$, we have
+    \begin{align*}
+        w(\alpha\mathbf{z}_1 + (1-\alpha)\mathbf{z}_2) &= \inf_{\mathbf{x} \in C} \, \left\{ f(\mathbf{x}) \colon g(\mathbf{x}) \leq \alpha\mathbf{z}_1 + (1-\alpha)\mathbf{z}_2 \right\} \\
+        &\leq \inf_{\mathbf{x} \in C} \, \left\{ f(\mathbf{x}) \colon \mathbf{x} = \alpha\mathbf{x}_1 + (1-\alpha)\mathbf{x}_2, \mathbf{x}_1, \mathbf{x}_2 \in C; \, g(\mathbf{x}_1) \leq\mathbf{z}_1 , g(\mathbf{x}_2) \leq \mathbf{z}_2 \right\}  \\
+        &\leq \inf_{\mathbf{x} \in C} \, \left\{ \alpha f(\mathbf{x_1}) + (1-\alpha) f(\mathbf{x}_2) \colon \mathbf{x}_1, \mathbf{x}_2 \in C, \, g(\mathbf{x}_1) \leq\mathbf{z}_1 , g(\mathbf{x}_2) \leq \mathbf{z}_2 \right\} \\
+        &= \alpha \inf_{\mathbf{x}_1 \in C} \, \left\{ f(\mathbf{x}) \colon g(\mathbf{x}) \leq \mathbf{z}_1 \right\} + (1-\alpha) \inf_{\mathbf{x} \in C} \, \left\{ f(\mathbf{x}) \colon g(\mathbf{x}) \leq \mathbf{z}_2 \right\} \\
+        &= \alpha w(\mathbf{z}_1) + (1-\alpha) w(\mathbf{z}_2). \qedhere
+    \end{align*}
+\end{proof}
+
+We assume further that $\mu_0 \vcentcolon= \inf_{\mathbf{x} \in \Tilde{C}} \, f(\mathbf{x})$ is finite. 
+
+\begin{thm}[Lagrange Multiplier Rule]
+    Suppose there exists $\mathbf{x}_1$ satisfying $g(\mathbf{x}_1) < \mathbf{0}$. Then, $\exists \bm{\Lambda} \geq \mathbf{0}$ such that
+    \[
+        \mu_0 = \inf_{\mathbf{x} \in C} f(\mathbf{x}) + \bm{\Lambda}^{\top} g(\mathbf{x}).
+    \]
+    Furthermore, if this infimum is attained at some $\mathbf{x}^* \in \Tilde{C}$, then $\mathbf{x}^*$ minimizes $f$ on $\Tilde{C}$ and
+    \[
+        \left\langle \bm{\Lambda}, g(\mathbf{x}^*) \right\rangle = 0.
+    \]
+\end{thm}
+
+Note: The existence of $\mathbf{x}_1$ satisfying $g(\mathbf{x}_1) < 0$ is sometimes called Slater's condition, and $\bm{\Lambda}$ is called the Lagrange multiplier.
+
+\begin{proof}
+    Let $B \vcentcolon= \left\{ (\mathbf{z}, y) \in \mathbb{R}^m \times \mathbb{R} \colon \mathbf{z} \leq \mathbf{0}, y \leq \mu_0 \right\}$. Then, $(\mathbf{x}_1, \mu_0 - \epsilon) \in \interior{B}$ for some $\epsilon > 0$ so that $\interior{B} \neq \emptyset$. Moreover, $\interior{B} \cap D = \emptyset$. Thus, there exists a supporting hyperplane
+    \[
+        \mathcal{H} \vcentcolon= \left\{ (\mathbf{z}, y) \in \mathbb{R}^m \times \mathbb{R} \colon \bm{\Lambda}^{\top}\mathbf{z} + \beta y = \gamma \right\}
+    \]
+    for suitable $\bm{\Lambda} \in \mathbb{R}^m$, $\beta, \gamma \in \mathbb{R}$ such that $D \subseteq U_{\mathcal{H}}$ and $B \subseteq L_{\mathcal{H}}$. That is, for all $(\mathbf{z}_1, y_1) \in D$, $(\mathbf{z}_2, y_2) \in B$, we have
+    \[
+        \beta y_1 + \bm{\Lambda}^{\top} \mathbf{z}_1 \geq \gamma \geq \beta y_2 + \bm{\Lambda}^{\top} \mathbf{z}_2.
+    \]
+    From the definition of $B$, we have $\bm{\Lambda} \geq \mathbf{0}$ and $\beta \geq 0$. Since $(\mathbf{0}, \mu_0) \in B$, substituting this in the above inequality, we get
+    \[
+        \bm{\Lambda}^{\top}\mathbf{z} + \beta y \geq \beta \mu_0 \quad \forall (\mathbf{z}, y) \in D.
+    \]
+    We leave it as an exercise to show that $\beta > 0$ (Hint: take $\beta = 0$ and arrive at a contradiction). Without loss of generality, we take $\beta = 1$. Since $(\mathbf{0}, \mu_0) \in \partial B \cap \partial D$, we have
+    \begin{align*}
+        \mu_0 &= \inf_{(\mathbf{z}, y) \in D} \, y + \bm{\Lambda}^{\top}\mathbf{z} \\
+        &\leq \inf_{\mathbf{x} \in C} f(\mathbf{x}) + \bm{\Lambda}^{\top} g(\mathbf{x}) \\
+        &\leq \inf_{\mathbf{x} \in \Tilde{C}} f(\mathbf{x}) + \bm{\Lambda}^{\top} g(\mathbf{x}) \\
+        &\leq \inf_{\mathbf{x} \in \Tilde{C}} f(\mathbf{x}) \\
+        &= \mu_0.
+    \end{align*}
+    The first and second inequalities follow because the infimum is over successively smaller sets, and the third inequality follows since $\bm{\Lambda}^{\top} g(\mathbf{x}) \leq 0$. Thus, equality must hold at every step, implying both statements of the theorem. 
+\end{proof}
+
+\begin{defn}[Saddle Point]
+    Given $C \subseteq \mathbb{R}^d$, $D \subseteq \mathbb{R}^m$, and a map $f \colon C \times D \to \mathbb{R}$, a point $(\mathbf{x}^*, \mathbf{y}^*) \in C \times D$ is said to be a \emph{saddle point} of $f$ if
+    \[
+        f(\mathbf{x}^*, \mathbf{y}) \leq f(\mathbf{x}^*, \mathbf{y}^*) \leq f(\mathbf{x}, \mathbf{y}^*)
+    \]
+    for all $(\mathbf{x}, \mathbf{y})$ in a relatively open neighbourhood of $(\mathbf{x}^*, \mathbf{y}^*)$ in $C \times D$. 
+\end{defn}
+
+Now, suppose that the infimum $\mu_0$ is attained at $\mathbf{x}_0 \in C$. We define the Lagrangian $\mathcal{L} \colon C \times \left\{ \mathbf{y} \in \mathbb{R}^m \colon \mathbf{y} \geq \mathbf{0} \right\} \to \mathbb{R}$ as
+\[
+    \mathcal{L}(\mathbf{x}, \mathbf{y}) \vcentcolon= f(\mathbf{x}) + \mathbf{y}^{\top} g(\mathbf{x}). 
+\]
+We then have the following property.
+
+\begin{thm}[Saddle Point Property]
+    The Lagrangian $\mathcal{L}(\cdot, \cdot)$ has a saddle point at $(\mathbf{x}_0, \bm{\Lambda})$. That is, 
+    \[
+        \mathcal{L}(\mathbf{x}_0, \mathbf{y}) \leq \mathcal{L}(\mathbf{x}_0, \bm{\Lambda}) \leq \mathcal{L}(\mathbf{x}, \bm{\Lambda}) \quad \forall \mathbf{x} \in C, \mathbf{0} \leq \mathbf{y} \in \mathbb{R}^m.
+    \]
+\end{thm}
+\begin{proof}
+    For any $\mathbf{x} \in C$, by definition of $\mu_0, \mathbf{x}_0$, we have
+    \[
+        \mu_0 = f(\mathbf{x}_0) + \bm{\Lambda}^{\top} g(\mathbf{x}_0) \leq f(\mathbf{x}) + \bm{\Lambda}^{\top} g(\mathbf{x}).
+    \]
+    Thus, $\mathcal{L}(\mathbf{x}_0, \bm{\Lambda}) \leq \mathcal{L}(\mathbf{x}, \bm{\Lambda})$ for all $\mathbf{x} \in C$. On the other hand, for all $\mathbf{y} \geq \mathbf{0}$ in $\mathbb{R}^m$, we have
+    \begin{align*}
+        \mathcal{L}(\mathbf{x}_0, \mathbf{y}) - \mathcal{L}(\mathbf{x}_0, \bm{\Lambda}) &= \mathbf{y}^{\top} g(\mathbf{x}_0) - \bm{\Lambda}^{\top} g(\mathbf{x}_0) \\
+        &= \mathbf{y}^{\top} g(\mathbf{x}_0) \\
+        &\leq 0
+    \end{align*}
+    by the Lagrange Multiplier Rule. The result hence follows. 
+\end{proof}

@@ -1,7 +1,7 @@
 \section{Lecture 2}
 
 \begin{thm}[Bolzano-Weierstrass Theorem]
-    Every bounded sequence ]oin $\mathbb{R}^d$ has a convergent subsequence.
+    Every bounded sequence in $\mathbb{R}^d$ has a convergent subsequence.
 \end{thm}
 \begin{proof}
     Suppose $d = 1$. Since $\left\{ x_n \right\}$ is bounded, we have $x_n \in [a,b]$ for all $n$ where $a,b \in \mathbb{R}$ and $a < b$. The idea is to keep halving the interval and pick a half interval containing infinitely many points. For example, consider the two half intervals $[a, \frac{a+b}{2}]$ and $[\frac{a+b}{2}, b]$. Since $\left\{ x_n \right\}$ has infinitely many points, at least one of these two half intervals has infinitely many points. Call this half interval $[a_1, b_1]$ and repeat this argument again for $[a_1, b_1]$. This gives us a sequence $\left\{ (a_n, b_n) \right\}$ satisfying 
@@ -46,7 +46,7 @@ Note that $\norm{e_n - e_m} = \sqrt{2}$ whenever $n \neq m$ and thus $\{e_n\}$ h
 \end{proof}
 
 \begin{cor}
-    Let $C \subset \mathbb{R}^d$ be closed and let $f \colon C \to \mathbb{R}$ satisfy 
+    Let $C \subset \mathbb{R}^d$ be closed and let $f \colon C \to \mathbb{R}$ be continuous and satisfy 
     \[
         \lim_{\norm{\mathbf{x}} \uparrow \infty} f(\mathbf{x}) = \infty.
     \]

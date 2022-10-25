@@ -1,0 +1,15 @@
+\section{Lecture 11}
+
+We shift our attention to Non-Linear Programming, a problem considerably harder than Linear Programming. Given an objective function $f \colon \mathbb{R}^d \to \mathbb{R}$, we wish to find a local minimum $\mathbf{x}^* \in \mathbb{R}^d$ of $f$. One method to do so is called the \textbf{line search}, which is an iterative method. We start with some initial guess $\mathbf{x}_0$ and use the current guess to compute the next guess. This gives us a sequence of estimates
+\[
+    \mathbf{x}_0 \to \mathbf{x}_1 \to \mathbf{x}_2 \cdots \mathbf{x}_n \to \mathbf{x}_{n+1} \to \cdots
+\]
+which we hope eventually converges to $\mathbf{x}^*$. A general line search iteration can be written as
+\[
+    \mathbf{x}_{k+1} = \mathbf{x}_k + \alpha_k \cdot \mathbf{d}_k.
+\]
+Two questions then naturally arise.
+\begin{enumerate}
+    \item What direction should we move in? (That is, how do we pick $\mathbf{d}_k$?)
+    \item How far should we move in this direction? (That is, how do we pick $\alpha_k$?)
+\end{enumerate}

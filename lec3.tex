@@ -1,0 +1,146 @@
+\section{Lecture 3}
+
+\begin{defn}[Directional Derivative]
+    Let $f \colon \mathbb{R}^d \to \mathbb{R}$ and $\mathbf{h} \in \mathbb{R}^d$ be a unit vector. We say that $f$ is differentiable at $\mathbf{x}$ in direction $\mathbf{h}$ if
+    \[
+        \lim_{\epsilon \downarrow 0} \frac{f(\mathbf{x}+\epsilon\mathbf{h}) - f(\mathbf{x})}{\epsilon}
+    \]
+    exists. In this case, the limit is called the \emph{directional derivative} of $f$ at $\mathbf{x}$ in direction $\mathbf{h}$, and is denoted $f^{\prime}(\mathbf{x},\mathbf{h})$.
+\end{defn}
+
+\begin{defn}[Gateaux Derivative]
+    Let $f \colon \mathbb{R}^d \to \mathbb{R}$ and $\mathbf{h} \in \mathbb{R}^d$ be a unit vector. If the limit
+    \[
+        \lim_{\epsilon \to 0} \frac{f(\mathbf{x}+\epsilon\mathbf{h}) - f(\mathbf{x})}{\epsilon}
+    \]
+    exists then it is called the \emph{Gateaux derivative} of $f$ at $\mathbf{x}$ along the line $\{\epsilon \mathbf{h} \colon \epsilon \in \mathbb{R}\}$, and is denoted $f^{\prime}(\mathbf{x},\mathbf{h})$. Alternatively, we may write 
+    \[
+    f(\mathbf{x} + \epsilon\mathbf{h}) = f(\mathbf{x}) + \epsilon f^{\prime}(\mathbf{x},\mathbf{h}) + o_{\mathbf{h}}(\epsilon)
+    \]
+    where $ \frac{o_{\mathbf{h}(\epsilon)}}{\epsilon} \to 0$ as $\epsilon \to 0$.
+\end{defn}
+
+\begin{defn}[Fréchet Derivative]
+    Let $f \colon \mathbb{R}^d \to \mathbb{R}$. If there exists a linear map $D_{\mathbf{x}}f \colon \mathbb{R}^d \to \mathbb{R}$ such that
+    \[
+        \sup_{\norm{\mathbf{h}} = 1} \, \norm{\frac{f(\mathbf{x}+\epsilon\mathbf{h}) - f(\mathbf{x})}{\epsilon} - D_{\mathbf{x}}(\mathbf{h})} \to 0
+    \]
+    as $\epsilon \to 0$, then $f$ is said to be \emph{Fréchet differentiable} and $D_{\mathbf{x}}f$ is called its Fréchet derivative at $\mathbf{x}$.
+\end{defn}
+
+If $f \colon \mathbb{R}^d \to \mathbb{R}$, then $D_{\mathbf{x}}f \in \mathbb{R}^d$ and is called the \emph{gradient}, denoted as $\nabla f(\mathbf{x})$. 
+
+If $f \colon \mathbb{R}^d \to \mathbb{R}^d$, then $D_{\mathbf{x}}f \in \mathbb{R}^{d \times d}$ and is called the \emph{Jacobian matrix}, denoted as
+\[
+    D_{\mathbf{x}}f = \left[\left[ \frac{\partial f_i}{\partial x_j}\right]\right]_{1 \leq i,j \leq d}.
+\]
+Now, $\nabla f(\cdot) \colon \mathbb{R}^d \to \mathbb{R}^d$. Its derivative is the Jacobian matrix of $\nabla f$ and is called the \emph{Hessian} of $f$, denoted as
+\[
+    \nabla^2 f(\mathbf{x}) = \left[\left[ \frac{\partial^2 f}{\partial x_i \partial x_j}\right]\right]_{1 \leq i,j \leq d}.
+\]
+
+Now onwards, unless otherwise mentioned, when we say that a function is differentiable, we mean that it is Fréchet differentiable.
+
+\begin{prop}
+    If $f$ is differentiable at $\mathbf{x}_0$, then 
+    \[
+        f(\mathbf{x}) = f(\mathbf{x}_0) + \left\langle \nabla f(\mathbf{x}_0, \mathbf{x} - \mathbf{x}_0 \right\rangle + o(\norm{\mathbf{x} - \mathbf{x}_0}).
+    \]
+    If $f$ is twice differentiable at $\mathbf{x}_0$, then 
+    \[
+        f(\mathbf{x}) = f(\mathbf{x}_0) + \left\langle \nabla f(\mathbf{x}_0, \mathbf{x} - \mathbf{x}_0 \right\rangle + \frac{1}{2} (\mathbf{x} - \mathbf{x}_0)^{top} \nabla^2 f(\mathbf{x}_0) (\mathbf{x} - \mathbf{x}_0) + o(\norm{\mathbf{x} - \mathbf{x}_0}^2).
+    \]
+\end{prop}
+
+\begin{thm}
+    If $f$ is differentiable and has a local minimum at $\mathbf{x}_0$, then $\nabla f(\mathbf{x}_0) = \mathbf{0}$.
+\end{thm}
+
+\begin{thm}
+    If $\mathbf{x}_0$ is a strict local minimum (i.e. there exists an open neighbourhood $O$ of $\mathbf{x}_0$ such that $f(\mathbf{y}) > f(\mathbf{x}_0)$ for all $\mathbf{y} \in O \setminus \{\mathbf{x}_0\}$) and $f$ is differentiable, then $\nabla^2f(\mathbf{x}_0)$ is positive semidefinite. Conversely, if $\nabla f(\mathbf{x}_0) = \mathbf{0}$ and $\nabla^2f(\mathbf{x}_0)$ is positive definite, then $\mathbf{x}_0$ is a local minimum.
+\end{thm}
+
+We now move to the setting of a generalized constrained optimization problem. Suppose $C \subseteq \mathbb{R}^d$ is open and $f \colon C \to \mathbb{R}$ is continuously differentiable. Suppose that $g_1, \ldots, g_k, h_1, \ldots, h_s \colon \mathbb{R}^d \to \mathbb{R}$ are all continuously differentiable ($k,s \geq 1$). We consider the constrained optimization problem
+\[
+    \min_{\mathbf{x} \in C} f(\mathbf{x})
+\]
+subject to
+\begin{align*}
+    g_i(\mathbf{x}) &= 0 \text{ for all } i \in \{1,\ldots,k\}, \quad \text{(equality constraints)} \\
+    h_i(\mathbf{x}) &\leq 0 \text{ for all } i \in \{1,\ldots,s\}. \quad \text{(inequality constraints)}
+\end{align*}
+
+\begin{thm}
+    Suppose $\mathbf{x}_0 \in C$ satisfies the constraints and $f(\mathbf{x}_0) \leq f(\mathbf{x})$ for all $\mathbf{x} \in C$. Then, there exist $\lambda_0, \lambda_1, \ldots, \lambda_k, \mu_1, \ldots, \mu_s$ such that
+    \[
+        \lambda_0 \frac{\partial f}{\partial x_j}(\mathbf{x}_0) + \sum_{i=1}^k \lambda_i \frac{\partial g_i}{\partial x_j}(\mathbf{x}_0) + \sum_{i=1}^s \mu_i \frac{\partial h_i}{\partial x_j}(\mathbf{x}_0) = 0 \quad \forall j. 
+    \]
+    Furthermore, 
+    \begin{enumerate}
+        \item $\lambda_0 \geq 0, \mu_r \geq 0$ for all $r$,
+        \item $h_r(\mathbf{x}_0) < 0 \implies \mu_r = 0$ (complementary slackness), and
+        \item if $\nabla g_i(\mathbf{x}_0)$ ($1 \leq i \leq k$) and those $\nabla h_r(\mathbf{x}_0)$ for which $h_r(\mathbf{x}_0)$ are linearly independent, then $\lambda_0 = 1$ without loss of generality.
+    \end{enumerate}
+\end{thm}
+
+\begin{proof}
+    Without loss of generality, let $\mathbf{x}_0 = \mathbf{0}$ and $f(\mathbf{x}_0) = 0$. Assume that $h_i(\mathbf{x}_0) = 0$ for $1 \leq i \leq l$, and $h_i(\mathbf{x}_0) < 0$ for $l < i \leq s$. Pick $\epsilon^*$ such that $\overline{B}_{\epsilon^*}(\mathbf{0}) \subseteq C$ and $h_i(\mathbf{x}) < 0$ for all $i > l$ and $\mathbf{x} \in \overline{B}_{\epsilon^*}(\mathbf{0})$.
+
+    \begin{lem}
+        For all $\epsilon \in (0,\epsilon^*)$, there exists $N_{\epsilon} \geq 1$ such that
+        \[
+            f(\mathbf{x}) + \norm{\mathbf{x}}^2 + N_{\epsilon} \left( \sum_{i=1}^k g_i(\mathbf{x})^2 + \sum_{j=1}^l h_j^+(\mathbf{x})^2 \right) > 0 \quad \forall \mathbf{x} \in \partial B_{\epsilon}(\mathbf{0}),
+        \]
+        where $h_j^+(\mathbf{x}) \vcentcolon= \max(0, h_j(\mathbf{x}))$.
+    \end{lem}  
+
+    \begin{proof}
+        Assume to the contrary. Then, $\exists N_m \uparrow \infty$ and $\mathbf{x}_m \in \partial B_{\epsilon}(\mathbf{x})$, $m \geq 1$ such that
+        \[
+            f(\mathbf{x}_m) + \norm{\mathbf{x}_m}^2 \leq -N_m \left( \sum_{i=1}^k g_i(\mathbf{x}_m)^2 + \sum_{j=1}^l h_j^+(\mathbf{x}_m)^2 \right) \quad \forall m.
+        \]
+        By Bolzano-Weierstrass, $\mathbf{x}_m \to \mathbf{x}^*$ along a subsequence denoted by $\{\mathbf{x}_m\}$ again, so that $f(\mathbf{x}_m) \to f(\mathbf{x}^*)$ by continuity. Dividing both sides by $-N_m$ and letting $m \uparrow \infty$, we get
+        \[
+            \sum_{i=1}^k g_i(\mathbf{x}^*)^2 + \sum_{j=1}^l h_j^+(\mathbf{x}^*)^2 \leq 0.
+        \]
+        Thus, $g_i(\mathbf{x}^*) = 0$ for all $1 \leq i \leq k$, and $h_j(\mathbf{x}^*) \leq 0$ for all $1 \leq j \leq l$. $\mathbf{x}^*$ satisfies the constraints and thus $f(\mathbf{x}^*) \geq f(\mathbf{x}_0)$. Note that $f(\mathbf{x}_m) \leq -\epsilon^2 \implies f(\mathbf{x}^*) \leq 0-\epsilon^2$. But, $f(\mathbf{x}_0) = 0$, a contradiction.
+    \end{proof}
+
+    Now, we define
+    \[
+        F(\mathbf{x}) \vcentcolon= f(\mathbf{x}) + \norm{x}^2 + N_{\epsilon} \left( \sum_{i=1}^k g_i(\mathbf{x})^2 + \sum_{j=1}^l h_j^+(\mathbf{x})^2 \right).
+    \]
+    Let $\hat{\mathbf{x}}$ be a minimizer of $F(\cdot)$ on $\overline{B}_{\epsilon}(\mathbf{0})$. Then, $F(\hat{\mathbf{x}}) \leq F(\mathbf{0}) = 0$. Thus, $\hat{\mathbf{x}} \notin \partial B_{\epsilon}(\mathbf{0})$ since we showed that $F$ is positive on $\partial B_{\epsilon}(\mathbf{0})$. Thus, $\nabla F(\hat{\mathbf{x}}) = \mathbf{0}$. Evaluating the derivative, we have
+    \[
+        \frac{\partial f}{\partial x_j}(\hat{\mathbf{x}}) + 2\hat{x}_j + 2N_{\epsilon} \sum_{i=1}^k g_i(\hat{\mathbf{x}}) \frac{\partial g_i}{\partial x_j}(\hat{\mathbf{x}}) + 2N_{\epsilon} \sum_{i=1}^l h_i(\hat{\mathbf{x}}) \frac{\partial h_i}{\partial x_j}(\hat{\mathbf{x}}) = 0 \quad \forall j.
+    \]
+
+    Next, we put $\epsilon^* = \epsilon^m \downarrow 0$ and rewrite as $N^m, \hat{\mathbf{x}}^m$, etc. The above equation can then be rewritten as
+    \[
+        \lambda_0^m \frac{\partial f}{\partial x_j}(\hat{\mathbf{x}}^m) + \frac{2\hat{\mathbf{x}}^m}{\norm{\mathbf{z}^m}} + \sum_{i=1}^k \lambda_i^m \frac{\partial g_i}{\partial x_j}(\hat{\mathbf{x}}^m) + \sum_{i=1}^l \mu_i^m \frac{\partial h_i}{\partial x_j}(\hat{\mathbf{x}}^m) = 0 \quad \forall j,
+    \]
+    where
+    \[
+        \mathbf{z}^m = \begin{bmatrix}
+            1 & 2N^m g_1(\hat{\mathbf{x}}^m) & \cdots & 2N^m g_k(\hat{\mathbf{x}}^m) & 2N^m h_1^+(\hat{\mathbf{x}}^m) & \cdots & 2N^m h_l^+(\hat{\mathbf{x}}^m) & 0 & \cdots & 0
+        \end{bmatrix} \in \mathbb{R}^{1+k+s}
+    \]
+    and we divide throughout by $\norm{\mathbf{z}^m}$. Further, we let
+    \[
+        \mathbf{U}^m \vcentcolon= \begin{bmatrix}
+            \lambda_0^m & \lambda_1^m & \cdots & \lambda_k^m & \mu_1^m & \cdots \mu_l^m & 0 & \cdots & 0
+        \end{bmatrix}
+    \]
+    with $\norm{\mathbf{U}^m} = 1$. Thus, $\mathbf{U}^m$ is the unit vector in the direction of $\mathbf{z}^m$. By the Bolzano-Weierstrass Theorem,
+    \[
+        \mathbf{U}^m \to \begin{bmatrix}
+            \lambda_0 & \lambda_1 & \cdots & \lambda_k & \mu_1 & \cdots \mu_l & 0 & \cdots & 0
+        \end{bmatrix}
+    \]
+    along a subsequence, and $\hat{\mathbf{x}}^m \to \mathbf{x}_0$. Thus, we get
+    \[
+        \lambda_0 \frac{\partial f}{\partial x_j}(\mathbf{x}_0) + \sum_{i=1}^k \lambda_i \frac{\partial g_i}{\partial x_j}(\mathbf{x}_0) + \sum_{i=1}^l \mu_i^m \frac{\partial h_i}{\partial x_j}(\mathbf{x}_0) = 0 \quad \forall j.
+    \]
+\end{proof}
+
+With $\lambda_0 \geq 0$, the above theorem is called the Fritz-John condition, whereas with $\lambda_0 = 1$ the above theorem is known as the famous Karush-Kuhn-Tucker condition. 

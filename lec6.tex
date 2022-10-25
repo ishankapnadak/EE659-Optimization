@@ -1,0 +1,133 @@
+\section{Lecture 6}
+
+\begin{lem}
+    Let $C \subseteq \mathbb{R}^d$ be closed, bounded, and convex, and let $\mathcal{H}$ be a support hyperplane of $C$ such that $C \subseteq L_{\mathcal{H}}$. Then, $C_1 \vcentcolon= C \cap \mathcal{H}$ is closed bounded convex, and $\mathcal{E}(C_1) \subseteq \mathcal{E}(C)$. 
+\end{lem}
+\begin{proof}
+    The first claim follows directly from the fact that $C$ is closed bounded convex and $\mathcal{H}$ is closed convex. Now, if $\mathcal{E}(C_1) \not\subseteq \mathcal{E}(C)$, then $\exists \mathbf{x} \in \mathcal{E}(C_1) \setminus \mathcal{E}(C)$. Then, $\mathbf{x} = \alpha\mathbf{y} + (1-\alpha)\mathbf{z}$ for some $\alpha \in (0,1)$ and $\mathbf{y}, \mathbf{z} \in \partial C$ with $\mathbf{y} \neq \mathbf{z}$. Clearly, at least one of $\mathbf{y}, \mathbf{z}$ (say $\mathbf{y}$) is not in $C_1$. Then, it is in $\partial C \setminus \mathcal{H} \subseteq \interior{L_{\mathcal{H}}}$. Then, $\mathbf{z} \in \interior{U_{\mathcal{H}}} \cap \partial C$ which is empty. Hence, $\mathbf{y}, \mathbf{z} \in \mathcal{H} \subseteq C_1$, but then $\mathbf{x} \notin \mathcal{E}(C_1)$, a contradiction.
+\end{proof}
+
+\begin{thm}[Carathéodory's Theorem]
+    Let $C \subseteq \mathbb{R}^d$ be closed bounded convex. Then, any $\mathbf{x} \in C$ can be written as a convex combination of at most $(d+1)$ extreme points of $C$. 
+\end{thm}
+\begin{proof}
+    We prove this by induction on $d$. For $d = 1$, $C$ is a closed bounded interval, say $[a,b]$ which has extreme points $a$ and $b$. For any $x \in [a,b]$, we may write
+    \[
+        x = \frac{b-x}{b-a} \cdot a + \frac{x-a}{b-a} \cdot b
+    \]
+    which is a convex combination of exactly $2$ extreme points. Suppose the claim holds for some $d \geq 1$. Let $C \subseteq \mathbb{R}^{d+1}$ be closed bounded and convex, with non-empty interior. If $\mathbf{x} \in \mathcal{E}(C)$, the $\mathbf{x}$ can clearly be written as a trivial convex combination of $1$ extreme point. Else, take $\mathbf{e}_1 \in \mathcal{E}(C)$ and extend the line segment from $\mathbf{e}_1$ through $\mathbf{x}$ till the point $\mathbf{b}_1 \vcentcolon= \mathbf{e}_1 + a(\mathbf{x} - \mathbf{e}_1)$ where $a \geq 1$ is the maximum number for which $\mathbf{b}_1$ thus defined lies in $C$. Then, $\mathbf{b}_1 \in \partial C$ (it is possible that $\mathbf{x} \in \partial C$ in which case $a = 1$ and $\mathbf{b}_1 = \mathbf{x}$). Let $\mathcal{H}_1$ be a support hyperplane at $\mathbf{b}_1$ such that $C \subseteq L_{\mathcal{H}_1}$. Let $C_1 \vcentcolon= C \cap \mathcal{H}_1$ which is closed bounded and convex as well. By induction hypothesis, $\mathbf{b}_1$ is a convex combination of at most $(d+1)$ extreme points in $\mathcal{E}(C_1) \subseteq \mathcal{E}(C)$. That is, we may write
+    \[
+        \mathbf{b}_1 = \sum_{i=2}^{d+2} \alpha_i \mathbf{e}_i
+    \]
+    for $\alpha_i \in [0,1]$ with $\mathbf{e}_2, \ldots, \mathbf{e}_{d+2} \in \mathcal{E}(C)$ and $\sum_i \alpha_i = 1$. Note that since we need not require all $d+1$ extreme points, some $\alpha_i$'s may be zero. Now, we have
+    \begin{align*}
+        \mathbf{b}_1 = \mathbf{e}_1 + a(\mathbf{x} - \mathbf{e}_1) &\implies \mathbf{x} = \mathbf{e}_1 + \frac{1}{a} \mathbf{b_1} - \frac{1}{a} \mathbf{e}_1 \\
+        &\implies \mathbf{x} = \frac{a-1}{a} \cdot \mathbf{e}_1 + \sum_{i=2}^{d+2} \frac{\alpha_i}{a} \cdot \mathbf{e}_i
+    \end{align*}
+    which is a convex combination of at most $(d+2)$ points in $\mathcal{E}(C)$. 
+\end{proof}
+
+\begin{thm}[Dubin's Theorem]
+    Let $C \subseteq \mathbb{R}^d$ be closed bounded convex and let $H_1, \ldots, H_m$ be closed half-spaces in $\mathbb{R}^d$ with $m \leq d$, defined as
+    \[
+        H_i \vcentcolon= \left\{ \mathbf{x} \in \mathbb{R}^d \colon \left\langle \mathbf{r}_i, \mathbf{x} \right\rangle \leq c_i \right\}, \quad 1 \leq i \leq m.
+    \]
+    Let 
+    \[
+        C^* \vcentcolon= C \cap \left( \bigcap_{i=1}^m H_i \right).
+    \]
+    Then, any extreme points of $C^*$ can be written as a convex combination of at most $(m+1)$ extreme points of $C$. 
+\end{thm}
+\begin{proof}
+    Suppose not, then there is some $\mathbf{x} \in \mathcal{E}(C^*)$ that can be written as a strict convex combination of $k$ elements of $\mathcal{E}(C)$ (with $m+1 < k \leq d+1$), say $\mathbf{x}_1, \ldots, \mathbf{x}_k$ and no less. These $\mathbf{x}_i$'s must form a $(k-1)$-simplex $\Delta \subseteq C$, with $\mathbf{x} \in \interior{\Delta}$. Clearly, $\mathbf{x} \notin \mathcal{E}(C)$. Consider a closed ball $\overline{B} \subseteq \Delta$ centered at $\mathbf{x}$. The intersection of $\overline{B}$ with $0 \leq l \leq m$ hyperplanes passing through $\mathbf{x}$ will be a disc $B^{\prime}$ centered at $\mathbf{x}$ such that the dimension of $\Span\{ \mathbf{y} - \mathbf{x} \colon \mathbf{y} \in B^{\prime} \}$ is at least $l$. Thus, $\mathbf{x}$ cannot be in $\mathcal{E}(C^*)$, a contradiction. 
+\end{proof}
+
+In several applications, we encounter a set of the form
+\[
+    \mathcal{K} \vcentcolon= \left\{ \mathbf{x} \in \mathbb{R}^d \colon \mathbf{Ax} \leq \mathbf{b} \right\}
+\]
+where $\mathbf{A} \in \mathbb{R}^{m \times d}$ and $\mathbf{b} \in \mathbb{R}^m$. We discuss the structure of extreme points of $\mathcal{K}$. 
+
+\newpage
+
+\begin{thm}
+    Let $\mathbf{x} \in \mathcal{K}$. Then, $\mathbf{x}$ is an extreme point of $\mathcal{K}$ if and only if some $d$ inequalities corresponding to $d$ linearly independent rows of the system $\mathbf{Ax} \leq \mathbf{b}$ are equalities. That is, $\langle \mathbf{a}_i, \mathbf{x} \rangle = b_i$ for $i$ corresponding to those $d$ linearly independent rows of $\mathbf{A}$.
+\end{thm}
+\begin{proof}
+    Let $\mathbf{x} \in \mathcal{K}$ be an extreme point. Let
+    \[
+        \mathcal{I} = \left\{ i \in \{1, \ldots, m \} \colon \langle \mathbf{a}_i, \mathbf{x} \rangle = b_i \right\}.
+    \]
+    Let $\mathcal{F} = \{ \mathbf{a}_i \colon i \in \mathcal{I} \}$. We need to show that $\mathcal{F}$ contains $d$ linearly independent vectors, or equivalently, that $\Span (\mathcal{F}) \supseteq \mathbb{R}^d$. Suppose $\Span(\mathcal{F}) \subsetneq \mathbb{R}^d$. Thus, $\mathcal{F}^{\perp} \neq \{\mathbf{0}\}$. Choose $\mathbf{z} \neq \mathbf{0} \in \mathcal{F}^{\perp}$. For $i \neq \mathcal{I}$, 
+    \[
+        \left\langle \mathbf{a}_i, \mathbf{x} \pm \epsilon \mathbf{z} \right\rangle = \left\langle \mathbf{a}_i, \mathbf{x} \right\rangle \pm \epsilon \left\langle \mathbf{a}_i, \mathbf{z} \right\rangle \leq b_i
+    \]
+    for $\epsilon$ sufficiently small, since $\langle \mathbf{a}_i, \mathbf{x} \rangle < b_i$. Thus, $\mathbf{x} \pm \epsilon \mathbf{z} \in \mathcal{K}$ for such $\epsilon$. But then,
+    \[
+        \mathbf{x} = \frac{1}{2} (\mathbf{x} + \epsilon\mathbf{z}) + \frac{1}{2} (\mathbf{x} - \epsilon\mathbf{z})
+    \]
+    contradicting the fact that $\mathbf{x}$ is an extreme point. Thus, $\Span(\mathcal{F}) \supseteq \mathbb{R}^d$. 
+
+    Conversely, let $\mathbf{x} \in \mathcal{K}$ be such that $d$ of the inequalities of the system $\mathbf{Ax} \leq \mathbf{b}$ are equalities. If $\mathbf{x}$ is not an extreme point, then there exist $\mathbf{z} \in \mathcal{K}$ such that $\mathbf{x} \pm \mathbf{z} \in \mathcal{K}$. Then,
+    \begin{align*}
+        \left\langle \mathbf{a}_i, \mathbf{x} + \mathbf{z} \right\rangle \leq b_i &\implies b_i + \left\langle \mathbf{a}_i, \mathbf{z} \right\rangle \leq b_i \implies \left\langle \mathbf{a}_i, \mathbf{z} \right\rangle \leq 0 \\
+        \left\langle \mathbf{a}_i, \mathbf{x} - \mathbf{z} \right\rangle \leq b_i &\implies b_i - \left\langle \mathbf{a}_i, \mathbf{z} \right\rangle \leq b_i \implies \left\langle \mathbf{a}_i, \mathbf{z} \right\rangle \geq 0
+    \end{align*}
+    Thus, $\langle \mathbf{a}_i, \mathbf{z} \rangle = 0$ for each $i$ for which $\langle \mathbf{a}_i, \mathbf{x} \rangle$. Note that there are at least $d$ such linearly vectors $\mathbf{a}_i$. Since $\mathbf{z} \in \mathbb{R}^d$, it follows that $\mathbf{z} = \mathbf{0}$, and hence, $\mathbf{x}$ is an extreme point of $\mathcal{K}$.
+\end{proof}
+
+\begin{cor}
+    $\mathcal{K}$ has finitely many extreme points.
+\end{cor}
+
+Finally, we state some facts about extreme points without proof. 
+
+\begin{enumerate}
+    \item A boundary point may not be an extreme point. (For example, the points on the edge of a rectangle except the corners are not extreme points.)
+
+    \item A convex set may not have an extreme point if it is not closed. (For example, the open ball in $\mathbb{R}^d$ has no extreme points.)
+
+    \item If $\mathbf{x} \in \partial C$ is not an extreme point, and $\mathbf{y}, \mathbf{z} \in C$ are such that $\mathbf{x} = \alpha \mathbf{y} + (1-\alpha)\mathbf{z}$ for some $\alpha \in (0,1)$, then $\mathbf{y}, \mathbf{z} \in \partial C$. 
+
+    \item An extreme point may have a unique supporting hyperplane that contains other non-extreme points. 
+
+    \item The set of extreme points of a closed bounded convex set can be written as a countable intersection of open sets. 
+\end{enumerate}
+
+\begin{defn}[Convex Function]
+    Let $C \subseteq \mathbb{R}^d$ be convex. A function $f \colon C \to \mathbb{R}$ is said to be \emph{convex} if for all $\mathbf{x}, \mathbf{y} \in C$, $\alpha \in [0,1]$, we have
+    \[
+        f\left( \alpha \mathbf{x} + (1-\alpha)\mathbf{y} \right) \leq \alpha f(\mathbf{x}) + (1-\alpha) f(\mathbf{y}).
+    \]
+\end{defn}
+\begin{prop}
+    Let $C \subseteq \mathbb{R}^d$ be convex. A function $f \colon C \to \mathbb{R}$ is convex iff $\forall\mathbf{x}_1, \ldots, \mathbf{x}_n \in C$, $a_i \geq 0$ with $\sum_i a_i =1$, we have
+    \[
+        f\left( \sum_{i=1}^n \alpha_i \mathbf{x}_i \right) \leq \sum_{i=1}^n \alpha_i f(\mathbf{x}_i).
+    \]
+\end{prop}
+\begin{proof}
+    Hint: Follow the proof for Proposition 4.3.
+\end{proof}
+
+The following properties follow directly from the definition and thus, we state them without proof. 
+
+\begin{enumerate}
+    \item Positive linear combinations of convex functions are convex. That is, if $\left\{ f_i \colon 1 \leq i \leq n \right\}$ are convex, and $a_1, \ldots, a_n \geq 0$, then $\sum_{i=1}^n a_i f_i$ is convex.
+
+    \item Pointwise limits of convex functions are convex. That is, if $f_n$ is convex for each $n \geq 1$, and $f(\mathbf{x}) \vcentcolon= \lim_{n \uparrow \infty} f_n(\mathbf{x})$ exists for each $\mathbf{x} \in C$, then $f$ is convex. 
+
+    \item Pointwise suprema or maxima of convex functions are convex whenever well-defined (that is, whenever pointwise finite).
+
+    \item Pointwise infima or minima of convex functions need not be convex.
+
+    \item If $f_1, \ldots, f_m$ are convex, and $g \colon \mathbb{R}^m \to \mathbb{R}$ is convex and componentwise increasing, then $h(\cdot) \vcentcolon= g\left( f_1(\cdot), \ldots, f_m(\cdot) \right) \colon C \to \mathbb{R}$ is convex. 
+
+    \item Let $\{ f_\alpha \})$ be a family of convex functions indexed by a parameter $\alpha \in \mathbb{R}^m$ and let $\varphi \colon \mathbb{R}^m \to [0,\infty)$. Suppose
+    \[
+        f^*(\mathbf{x}) \vcentcolon= \int f_{\alpha}(\mathbf{x}) \varphi(\alpha) \, \mathrm{d}\alpha
+    \]
+    is well-defined as a Riemann integral for all $\mathbf{x} \in C$. Then, $f^*$ is convex.
+
+    \item Let $f \colon \mathbb{R}^d \to \mathbb{R}$ be convex, $\mathbf{b} \in \mathbb{R}^d$, $\mathbf{A} \in \mathbb{R}^{d \times m}$. Then, $g \colon \mathbb{R}^m \to \mathbb{R}$ defined as $g(\mathbf{x}) \vcentcolon= f(\mathbf{Ax} + \mathbf{b})$ is convex. 
+\end{enumerate}
