@@ -1,0 +1,25 @@
+\section{Lecture 14}
+
+Let $f(\mathbf{x}) \vcentcolon= \mathbf{Ax}$ where $\mathbf{A} \in \mathbb{R}^{m \times n}$ with $m \leq n$. 
+
+\begin{thm}
+    \begin{enumerate}
+        \item If $\mathbf{A}$ is full rank, then for all $\mathbf{b} \in \mathbb{R}^m$, the set $\left\{ \mathbf{x} \in \mathbb{R}^n \colon \mathbf{Ax} = \mathbf{b} \right\}$ is an $(n-m)$ dimensional subspace of $\mathbb{R}^n$. 
+
+        \item If $\mathbf{A}$ is not full rank, then the set $\mathcal{S} = \left\{ \mathbf{y} \in \mathbb{R}^m \colon \mathbf{Ax} = \mathbf{y} \right\}$ has dimension less than $n$. Moreover, the $m$-dimensional volume of $\mathcal{S}$ is $0$. 
+    \end{enumerate}
+\end{thm}
+
+\begin{defn}[Manifold]
+    A space $\mathcal{S}$ is a ($d$-dimensional) \emph{manifold} if it locally resembles Euclidean space at each point. More precisely, for every $\mathbf{x} \in \mathcal{S}$, there is an open neighbourhood $\mathcal{O}$ of $\mathbf{x}$ which can be invertibly mapped to $\mathbb{R}^d$. 
+\end{defn}
+
+Let $f \colon \mathcal{O} \to \mathbb{R}^d$ be the (invertible) map described above. $\mathcal{S}$ is a $\mathcal{C}^k$ manifold if $f,f^{-1}$ are $k$ times continuously differentiable. If $\mathcal{S}$ is a $\mathcal{C}^{\infty}$ manifold, then $\mathcal{S}$ is called a \emph{smooth} manifold and $f,f^{-1}$ are called \emph{diffeomorphisms}. If $f,f^{-1}$ are continuous, then $\mathcal{S}$ is called a \emph{topological} manifold and $f,f^{-1}$ are called \emph{homeomorphisms}.
+
+\begin{thm}[Implicit Function Theorem]
+    Let $\mathcal{S}$ be a $d$-dimensional smooth manifold and let $f \colon \mathcal{S} \to \mathbb{R}^k$ with $k < d$. If for some $\mathbf{x}_0 \in \mathcal{S}$ we have that $\mathbf{D}f(\mathbf{x}_0)$ is full rank (onto), then there exists an open neighbourhood $\mathcal{O}$ of $\mathbf{x}_0$ such that for $\mathbf{y} = f(\mathbf{x}_0)$, $\mathcal{O} \cap f^{-1}(\mathbf{y})$ is a \emph{unique} $(d-k)$ dimensional submanifold. 
+\end{thm}
+
+\begin{thm}[Sard's Theorem]
+    Let $\mathcal{S}$ be a $d$-dimensional smooth manifold and let $f \colon \mathcal{S} \to \mathbb{R}^k$ with $k < d$. Let $X \subseteq \mathcal{S}$ denote the \emph{critical set} of $f$, that is, the set of points $\mathbf{x} \in \mathcal{S}$ such that $\mathbf{D}f(\mathbf{x})$ is not full-rank. Then, the image $f(X)$ has $k$-dimensional volume $0$. 
+\end{thm}

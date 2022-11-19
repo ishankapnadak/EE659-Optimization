@@ -2,14 +2,129 @@
 
 We shift our attention to Non-Linear Programming, a problem considerably harder than Linear Programming. Given an objective function $f \colon \mathbb{R}^d \to \mathbb{R}$, we wish to find a local minimum $\mathbf{x}^* \in \mathbb{R}^d$ of $f$. One method to do so is called the \textbf{line search}, which is an iterative method. We start with some initial guess $\mathbf{x}_0$ and use the current guess to compute the next guess. This gives us a sequence of estimates
 \[
-    \mathbf{x}_0 \to \mathbf{x}_1 \to \mathbf{x}_2 \cdots \mathbf{x}_n \to \mathbf{x}_{n+1} \to \cdots
+    \mathbf{x}_0 \to \mathbf{x}_1 \to \mathbf{x}_2 \to \cdots \to \mathbf{x}_n \to \mathbf{x}_{n+1} \to \cdots
 \]
 which we hope eventually converges to $\mathbf{x}^*$. A general line search iteration can be written as
 \[
-    \mathbf{x}_{k+1} = \mathbf{x}_k + \alpha_k \cdot \mathbf{d}_k.
+    \mathbf{x}_{n+1} = \mathbf{x}_n + \alpha_n \cdot \mathbf{d}_n.
 \]
 Two questions then naturally arise.
 \begin{enumerate}
-    \item What direction should we move in? (That is, how do we pick $\mathbf{d}_k$?)
-    \item How far should we move in this direction? (That is, how do we pick $\alpha_k$?)
+    \item What direction should we move in? (That is, how do we pick $\mathbf{d}_n$?)
+    \item How far should we move in this direction? (That is, how do we pick $\alpha_n$?)
 \end{enumerate}
+
+A naïve way to proceed is to use exact line minimization. That is, at every step we solve the following scalar optimization problem:
+\[
+    \alpha_n \vcentcolon= \argmin_{\alpha} f(\mathbf{x}_n + \alpha \cdot \mathbf{d}_n)
+\]
+where the search takes place over a suitable subset of $\mathbb{R}^+$. This problem, however, may not be easy or fast to solve in the general non-convex case. Moreover, the above minimization represents a \textit{greedy} heuristic, and it is not clear if this is really the best thing to do.
+
+The more common approach is to restrict the line search to an interval $\mathcal{I} = [0,r]$ for a suitable $r < \infty$. Further, we relax the exact minimization objective and instead search for points that give us an adequate decrease in the objective function. A classical scheme to do so relies on a `search and compare' idea wherein we successively generate subintervals of $\mathcal{I}$ recursively by subdividing the previous interval at each step. One example is the simple binary search method which bisects the interval at each step. Some more sophisticated methods include the Fibonacci search where intervals are subdivided according to the ratio of successive Fibonacci numbers and the golden section method where the ratio is fixed at the golden ratio (which, as it turns out, is the limiting ratio of two successive Fibonacci numbers). These latter two algorithms have some theoretically proven advantages over the simple binary search method.
+
+Even in such cases, however, there is no guarantee of convergence and the iterates may keep oscillating. To fix this, we intuitively require that the direction $\mathbf{d}_n$ behaves ``gradient-like''. More concretely, we hope that
+\[
+    \left\langle \nabla f(\mathbf{x}_n), \mathbf{d}_n \right\rangle < 0
+\]
+so that by the Taylor formula, we have
+\begin{align*}
+    f(\mathbf{x}_{n+1}) &= f(\mathbf{x}_n) + \alpha_n \cdot \left\langle \nabla f(\mathbf{x}_n), \mathbf{d}_n \right\rangle + o(\alpha_n) \\
+    &< f(\mathbf{x}_n) + o(\alpha_n).
+\end{align*}
+
+Note that the $\left\langle \nabla f(\mathbf{x}_n), \mathbf{d}_n \right\rangle$ may be quite close to $0$ even for non-negligible values of $\nabla f(\mathbf{x}_n), \mathbf{d}_n$ unless the angle between the two is bounded away from $\pm \frac{\pi}{2}$. Thus, what we really require is
+\[
+    \left\langle \nabla f(\mathbf{x}_n), \mathbf{d}_n \right\rangle < -\delta_n
+\]
+for a judiciously chosen $\delta_n > 0$.
+
+A popular variant of this scheme is the \textbf{Armijo rule}, which we describe next. We first impose the following two conditions:
+\begin{align*}
+    \sup_n \, \norm{\mathbf{d}_n} &< \infty, \\
+    \sup_n \left\langle \nabla f(\mathbf{x}_n), \mathbf{d}_n \right\rangle &< 0.
+\end{align*}
+
+The Armijo rule is as follows. Let $\mathcal{I} = [0,r]$ be fixed as before. Fix $0 < \sigma, \beta < 1$. Set $\alpha_n \vcentcolon= \beta^{m(n)} r$ where
+\[
+    m(n) \vcentcolon= \left\{ m \geq 0 \colon f(\mathbf{x}_n) - f(\mathbf{x}_n + \beta^m r \mathbf{d}_n) \geq -\sigma \beta^m r \left\langle \nabla f(\mathbf{x}_n), \mathbf{d}_n \right\rangle  \right\}
+\]
+
+We then have the following result.
+
+\begin{thm}
+    If $\mathbf{x}_n \to \mathbf{x}^*$ along a subsequence, then $\nabla f(\mathbf{x}^*) = \mathbf{0}$.
+\end{thm}
+\begin{proof}
+    Let $\mathbf{x}_{n_k} \to \mathbf{x}^*$ along a subsequence and suppose that $\nabla f(\mathbf{x}^*) \neq \mathbf{0}$. We have
+    \[
+        f(\mathbf{x}_{n_k} - f(\mathbf{x}_{n_k + 1}) \to 0.
+    \]
+    However, 
+    \begin{align*}
+        f(\mathbf{x}_{n_k}) - f(\mathbf{x}_{n_k + 1}) &\geq -\alpha_{n_k} \left\langle \nabla f(\mathbf{x}_n), \mathbf{d}_n \right\rangle \\
+        &\geq 0 \quad (\text{by the hypothesis that } \left\langle \nabla f(\mathbf{x}_n), \mathbf{d}_n \right\rangle < 0).
+    \end{align*}
+    Thus, we must have
+    \[
+        \alpha_{n_k} \left\langle \nabla f(\mathbf{x}_n), \mathbf{d}_n \right\rangle \to 0 \implies \alpha_{n_k} \to 0
+    \]
+    where the latter follows since $\sup_n \left\langle \nabla f(\mathbf{x}_n), \mathbf{d}_n \right\rangle < 0$. Now,
+    \[
+        f(\mathbf{x}_{n_k}) - f\left( \mathbf{x}_{n_k} + \frac{\alpha_{n_k}}{\beta}\mathbf{d}_{n_k} \right) < -\sigma  \frac{\alpha_{n_k}}{\beta} \left\langle \nabla f(\mathbf{x}_n), \mathbf{d}_n \right\rangle.
+    \]
+    Next, define
+    \begin{align*}
+        \mathbf{p}_k &\vcentcolon= \frac{\mathbf{d}_{n_k}}{\norm{\mathbf{d}_{n_k}}} \\  b_k &\vcentcolon= \frac{\alpha_{n_k} \norm{\mathbf{d}_{n_k}}}{\beta} \\
+        \mathbf{x}^{\prime}_k &\vcentcolon= \mathbf{x}_{n_k} \\
+        \mathbf{d}^{\prime}_k &\vcentcolon= \mathbf{d}_{n_k}.
+    \end{align*}
+    By the Bolzano-Weierstrass Theorem, $\mathbf{p}_k \to \mathbf{p}^*$ along a subsequence (since these are unit vectors and bounded), which we shall denote as $\{\mathbf{p}_k\}$ again. Rewriting with this new notation, we have
+    \[
+        \frac{f(\mathbf{x}^{\prime}_k) - f\left( \mathbf{x}^{\prime}_k + b_k \mathbf{p}_k \right)}{b_k} < -\sigma \cdot \left\langle \nabla f(\mathbf{x}^{\prime}_k), \mathbf{p}_k \right\rangle
+    \]
+    Thus, for some $c_k \in [0,b_k]$, we have
+    \[
+        -\left\langle \nabla f(\mathbf{x}^{\prime}_k + c_k \mathbf{p}_k), \mathbf{p}_k \right\rangle < -\sigma \left\langle \nabla f(\mathbf{x}^{\prime}_k), \mathbf{p}_k \right\rangle
+    \]
+    Letting $k \uparrow \infty$, we have
+    \[
+        -\left\langle \nabla f(\mathbf{x}^*), \mathbf{p}^* \right\rangle \leq -\sigma \left\langle \nabla f(\mathbf{x}^*), \mathbf{p}^* \right\rangle \implies \left\langle \nabla f(\mathbf{x}^*), \mathbf{p}^* \right\rangle \geq 0.
+    \]
+    However, we also have
+    \[
+        \left\langle \nabla f(\mathbf{x}^{\prime}_k), \mathbf{p}_k \right\rangle = \frac{\left\langle \nabla f(\mathbf{x}^{\prime}_k), \mathbf{d}_k \right\rangle}{\norm{\mathbf{d}_k}}
+    \]
+    Again, letting $k \uparrow \infty$, 
+    \[
+        \left\langle \nabla f(\mathbf{x}^*), \mathbf{p}^* \right\rangle = \lim_{k \uparrow \infty} \frac{\left\langle \nabla f(\mathbf{x}^{\prime}_k), \mathbf{d}_k \right\rangle}{\norm{\mathbf{d}_k}} < 0
+    \]
+    which is a contradiction. 
+\end{proof}
+
+At every step $\mathbf{d}_k$ in terms of the current iterate $\mathbf{x}_k$ which allows us to write $\mathbf{d}_k = f(\mathbf{x}_k)$ for some appropriate $f \colon \mathbb{R}^d \to \mathbb{R}^d$. It helps to view the algorithm as a discretization (Euler scheme) of the ODE
+\[
+    \dot{\mathbf{x}}(t) = f(\mathbf{x}(t)).
+\]
+As a result, we need
+\[
+    \sum_{n=1}^{\infty} \alpha_n = \infty
+\]
+to make sure the entire time axis is covered. 
+
+\subsection*{Gradient Descent}
+
+A popular variant of the iterative algorithm is \textbf{Gradient Descent} wherein we have the following update rule:
+\[
+    \mathbf{x}_{k+1} = \mathbf{x}_k - \alpha_k \cdot \nabla f(\mathbf{x}_k).
+\]
+As a result, we have
+\[
+    f(\mathbf{x}_{k+1}) = f(\mathbf{x}_k) - \alpha_k \norm{\nabla f(\mathbf{x}_k)}^2 + o(\alpha_k).
+\]
+This guarantees convergence to points where $\nabla f(\mathbf{x}) = \mathbf{0}$, which we call \textit{critical points}. However, such points need not necessarily be local minima (for example, they can be local maxima too). However, we don't usually run into this problem due to the reasons described below. 
+
+\begin{defn}[Isolated Critical Points]
+    A critical point $\mathbf{x}^*$ of $f$ is said to be \emph{isolated} if there is an open neighborhood $\mathcal{O}$ of $\mathbf{x}^*$ that contains no other critical points of $f$.     
+\end{defn}
+
+For most ``nice'' functions, critical points are isolated and so we are more or less guaranteed to converge to these points. There may be cases where we start exactly at a local maximum in which case our iterate remains unchanged. However, this is highly unlikely and thus convergence to a local minimum is almost guaranteed. 

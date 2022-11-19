@@ -1,0 +1,93 @@
+\section{Lecture 13}
+
+\subsection*{Conjugate Gradient Method}
+
+Let $f(\mathbf{x}) = \frac{1}{2} \mathbf{x}^{\top} \mathbf{Q} \mathbf{x} - \mathbf{b}^{\top} \mathbf{x}$ where $\mathbf{Q}$ is positive definite. This allows us to define an inner product
+\[
+    \left\langle \mathbf{x}, \mathbf{y} \right\rangle_{\mathbf{Q}} \vcentcolon= \mathbf{x}^{\top} \mathbf{Q} \mathbf{y}
+\]
+\begin{defn}[Conjugate Directions]
+    $\{ \mathbf{d}_i \}_i \subseteq \mathbb{R}^d$ are said to be \emph{conjugate directions} if $\mathbf{d}_i \neq \mathbf{0}$ for all $i$, and
+    \[
+        \left\langle \mathbf{d}_i, \mathbf{d}_j \right\rangle_{\mathbf{Q}} = \mathbf{0} \quad \text{for all } i \neq j.
+    \]
+    Clearly, there are at most $d$ such conjugate directions.
+\end{defn}
+
+Now, consider the algorithm
+\[
+    \mathbf{x}_{n+1} = \mathbf{x}_n + \alpha_n \mathbf{d}_n
+\]
+where $\mathbf{d}_n$'s are chosen from the set of conjugate directions. Further, assume that exact line minimization is carried out. We then have
+\[
+    \alpha_n = \argmin_{\alpha} \, f(\mathbf{x}_n + \alpha \mathbf{d}_n) = \frac{\mathbf{d}_n^{\top} (\mathbf{b} - \mathbf{Qx}_n)}{\norm{\mathbf{d}_n}^2}
+\]
+Further, 
+\[
+    \nabla f(\mathbf{x}) = \mathbf{Qx} - \mathbf{b} \implies \nabla f(\mathbf{x}_n)^{\top} \mathbf{d}_i = 0 \quad \forall i < n.
+\]
+Thus, 
+\[
+    \mathbf{x}_{n+1} = \argmin_{\mathbf{x} \in \Span\{\mathbf{d}_i\}, 1 \leq i \leq n} f(\mathbf{x}).
+\]
+Thus, $\mathbf{x}_n$ converges to $\argmin f$ in at most $d$ steps. This is called the method of conjugate directions.
+
+The conjugate gradient algorithm corresponds to the special case when the $\mathbf{d}_i$'s are computed by successively applying Gram-Schmidt orthogonalization to $-\nabla f(\mathbf{x}_n)$, $n \geq 0$, with respect to the inner product $\langle \cdot, \cdot \rangle_{\mathbf{Q}}$. Let $\mathbf{g}_n \vcentcolon= \nabla f(\mathbf{x}_n)$. Then, $\mathbf{g}_n \perp \mathbf{d}_i$ for $i < n$, so that $\mathbf{g}_n \perp \mathbf{g}_i$ for $i < n$. Further, we can easily show that
+\[
+    \mathbf{g}_n^{\top} \mathbf{Qd}_j = \begin{cases}
+        0 & \text{for }0 \leq j < n-1, \text{ and} \\
+        \displaystyle \frac{\mathbf{g}_n^{\top} \mathbf{g}_n}{\alpha_{n-1}} & \text{for } j = n-1.
+    \end{cases}
+\]
+Furthermore, we have
+\[
+    \mathbf{d}_j^{\top} \mathbf{Qd}_j = \frac{1}{\alpha_j} \mathbf{d}_j^{\top} (\mathbf{g}_{j+1} - \mathbf{g}_j)
+\]
+Substituting this in the Gram-Schmidt formula, given by
+\[
+    \mathbf{d}_n = -\mathbf{g}_n + \sum_{j=0}^{n-1} \frac{\mathbf{g}_n^{\top} \mathbf{Qd}_j}{\mathbf{d}_j^{\top} \mathbf{Qd}_j} \cdot \mathbf{d}_j
+\]
+we get
+\[
+    \mathbf{d}_n = -\mathbf{g}_n + \beta_n \mathbf{d}_{n-1}
+\]
+where
+\[
+    \beta_n = \frac{\norm{\mathbf{g}_n}^2}{\mathbf{d}_{n-1}^{\top} (\mathbf{g}_n - \mathbf{g}_{n-1})}
+\]
+
+Simplifying this, we get the following conjugate gradient algorithm.
+
+\begin{align*}
+    \mathbf{x}_{n+1} &= \mathbf{x}_n + \alpha_n \mathbf{d}_n \\
+    \mathbf{d}_{n+1} &= -\nabla f(\mathbf{x}_{n+1}) + \beta_{n+1} \mathbf{d}_n \\
+    \alpha_n &= \frac{\mathbf{d}_n^{\top}(\mathbf{b} - \mathbf{Qx}_n)}{\mathbf{d}_n^{\top}\mathbf{Qd}_n} \\
+    \beta_n &= \frac{\norm{\nabla f(\mathbf{x}_n)^2}}{\norm{\nabla f(\mathbf{x}_{n-1})}^2}
+\end{align*}
+The above choice of $\beta_n$ is called the \textbf{Fletcher-Reeves} formula. A better choice in practice is the \textbf{Polak-Ribiere} formula which generalizes to non-quadratic functions. This formula is as follows.
+
+\[
+    \beta_n = \frac{\left\langle \nabla f(\mathbf{x}_n), \nabla f(\mathbf{x}_n) - \nabla f(\mathbf{x}_{n-1}) \right\rangle}{\norm{\nabla f(\mathbf{x}_{n-1})}^2}
+\]
+
+\subsection*{Newton-Raphson Method}
+
+Suppose you wish to solve for $f(\mathbf{x}) = \mathbf{0}$ for some $f \colon \mathbb{R}^d \to \mathbb{R}^d$. By virtue of Taylor expansion, we may write
+\[
+    f(\mathbf{x}_1) \approx f(\mathbf{x}_0) + \mathbf{D}f(\mathbf{x}_0) (\mathbf{x}_1 - \mathbf{x}_0).
+\]
+Assuming $f(\mathbf{x}_1) \approx \mathbf{0}$, we get
+\begin{align*}
+    \mathbf{x}_1 &= \mathbf{x}_0 + \mathbf{D}f(\mathbf{x}_0)^{-1} \left(f(\mathbf{x}_1) - f(\mathbf{x}_0) \right) \\
+    &\approx \mathbf{x}_0 - \mathbf{D}f(\mathbf{x}_0)^{-1} f(\mathbf{x}_1).
+\end{align*}
+
+This gives us the iterative scheme
+\[
+    \mathbf{x}_{n+1} = \mathbf{x}_n - \alpha_n \mathbf{D}f(\mathbf{x}_n)^{-1} f(\mathbf{x}_n). 
+\]
+This scheme has been shown to work in practice most of the time. One can show that to ``minimize'' the error term at each iteration, one must use the following iterative scheme.
+\[
+    \mathbf{x}_{n+1} = \mathbf{x}_n - \alpha_n \left( \nabla^2 f(\mathbf{x}_n) \right)^{-1} \nabla f(\mathbf{x}_n).
+\]
+However, computing the Hessian at each step is extremely expensive. Furthermore, the estimation of the gradients and the Hessian poses several numerical issues such as the small divisor problem.  
