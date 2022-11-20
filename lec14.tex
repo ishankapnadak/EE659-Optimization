@@ -23,3 +23,70 @@ Let $f \colon \mathcal{O} \to \mathbb{R}^d$ be the (invertible) map described ab
 \begin{thm}[Sard's Theorem]
     Let $\mathcal{S}$ be a $d$-dimensional smooth manifold and let $f \colon \mathcal{S} \to \mathbb{R}^k$ with $k < d$. Let $X \subseteq \mathcal{S}$ denote the \emph{critical set} of $f$, that is, the set of points $\mathbf{x} \in \mathcal{S}$ such that $\mathbf{D}f(\mathbf{x})$ is not full-rank. Then, the image $f(X)$ has $k$-dimensional volume $0$. 
 \end{thm}
+
+The differential equation counterpart of the Newton scheme is
+\[
+    \Dot{\mathbf{x}}(t) = - \left( \nabla^2 f(\mathbf{x}(t)) \right)^{-1} \, \nabla f(\mathbf{x}(t)) =\vcentcolon \mathbf{h}(\mathbf{x}(t))
+\]  
+Let $E$ be the set of equilibria of the this equation, that is, $E = \left\{ \mathbf{x} \in \mathbb{R}^d \colon \mathbf{h}(\mathbf{x}) = \mathbf{0} \right\}$. Suppose that $E$ can be enclosed in a bounded region $D$ such that $\mathbf{h}$ is always pointing inwards at the boundary $\partial D$ of $D$. Now, away from $E$, $\norm{\nabla f(\mathbf{x})} > 0$ and we may define
+\[
+    \mathbf{g}(\mathbf{x}) \vcentcolon= \frac{\nabla f(\mathbf{x})}{\norm{\nabla f(\mathbf{x}}}.
+\]
+Further, $\mathbf{g}(\mathbf{x}) = \mathbf{c}$ represents a trajectory of the differential equation. Note that $\mathbf{g}$ maps $\mathbb{R}^d$ onto the unit $d$-sphere $\mathcal{S}_d \vcentcolon= \left\{ \mathbb{R}^d \colon \norm{\mathbf{x}} = 1 \right\}$ which is a $(d-1)$-dimensional object. Thus, we expect the inverse image of any $\mathbf{c} \in \mathcal{S}_d$ under $\mathbf{g}$ ($\mathbf{g}^{-1}(\mathbf{c})$) to be a $1$-dimensional curve in $\mathbb{R}^d$. If the conditions imposed in the Implicit Function Theorem hold, we may conclude by the Implicit Function Theorem that in a sufficiently small neighbourhood of any point in $D \setminus E$, there is a unique such curve. Starting from the boundary, we have the following. 
+\begin{enumerate}
+    \item The curve cannot intersect itself, 
+    \item the curve cannot come arbitrarily close to itself, and
+    \item the curve cannot end abruptly at a point in $D \setminus E$ since the Implicit Function Theorem allows us to extend it further.
+    \item The curve cannot turn around and exit $D$ since $\mathbf{h}$ points inwards at $\partial D$.
+\end{enumerate}
+Thus, the curve must converge to $E$. Moreover, by Sard's Theorem, these arguments fail for $\mathbf{c}$ belonging to a set of measure zero. Thus, the Newton scheme works for `almost all' initial conditions.
+
+\subsection*{Quasi-Newton Schemes}
+
+Although the Newton scheme has a very reliable and sleek theory, it often runs into numerical issues in practice, since we can only estimate the gradients. This has led to the development of approximate methods known as \emph{quasi-Newton} methods. The idea is to keep track of a running recursive estimate of $\nabla^2 f(\mathbf{x}_n)^{-1}$ in a manner that ensures positive definiteness and the \emph{quasi-Newton} condition. We have
+\[
+    \nabla f(\mathbf{x}_{n+1}) - \nabla f(\mathbf{x}_n) \approx \nabla^2 f(\mathbf{x}_{n+1}) (\mathbf{x}_{n+1} - \mathbf{x}_n)
+\]
+Thus, the approximation $\mathbf{H}_{n+1}$ of $\nabla^2 f(\mathbf{x}_{n+1})^{-1}$ should satisfy the quasi-Newton condition
+\[
+    \mathbf{x}_{n+1} - \mathbf{x}_n = \mathbf{H}_{n+1} \left( \nabla f(\mathbf{x}_{n+1}) - \nabla f(\mathbf{x}_n) \right)
+\]
+
+A simple update scheme is to use a rank-1 update of the form $\mathbf{A} \mapsto \mathbf{A} + \mathbf{uu}^{\top}$ for a suitable $\mathbf{u}$. A lot of the early schemes used this update but faced numerical issues such as the small divisor problem. A more sophisticated approach is to a use rank-2 update of the form $\mathbf{A} \mapsto \mathbf{A} + \mathbf{uu}^{\top} + \mathbf{vv}^{\top}$ for suitable $\mathbf{u}, \mathbf{v}$. 
+
+To this end, we introduce the notation 
+\begin{align*}
+    \mathbf{s}_n &\vcentcolon= \mathbf{x}_{n+1} - \mathbf{x}_n, \\
+    \mathbf{y}_n &\vcentcolon= \nabla f(\mathbf{x}_{n+1}) - \nabla f(\mathbf{x}_n), \\
+    \mathbf{w}_n &\vcentcolon= \frac{\mathbf{s}_n}{\mathbf{y}_n^{\top} \mathbf{s}_n} - \frac{\mathbf{H}_n \mathbf{y}_n}{\mathbf{y}_n^{\top} \mathbf{H}_n \mathbf{y}_n}.
+\end{align*}
+
+The quasi-Newton condition can then be written as
+\[
+    \mathbf{s}_n = \mathbf{H}_{n+1} \mathbf{y}_n.
+\]
+Now, we consider the rank-2 update
+\[
+    \mathbf{H}_{n+1} = \mathbf{H}_n + \alpha \mathbf{uu}^{\top} + \beta \mathbf{vv}^{\top}
+\]
+for suitable scalars $\alpha,\beta$ and vectors $\mathbf{u},\mathbf{v}$. By the quasi-Newton condition, we have
+\[
+    \mathbf{s}_n = \mathbf{H}_n\mathbf{y}_n + \alpha \mathbf{uu}^{\top} \mathbf{y}_n + \beta \mathbf{vv}^{\top} \mathbf{y}_n.
+\]
+We choose $\mathbf{u} = \mathbf{s}_n$, $\mathbf{v} = \mathbf{H}_n \mathbf{y}_n$, and $\alpha, \beta$ such that $\alpha \mathbf{u}^{\top} \mathbf{y}_n = 1$ and $\beta \mathbf{v}^{\top} \mathbf{y}_n = -1$. This leads to 
+\[
+    \mathbf{H}_{n+1} = \mathbf{H}_n + \frac{\mathbf{s}_n \mathbf{s}_n^{\top}}{\mathbf{s}_n^{\top} \mathbf{y}_n} - \frac{\mathbf{H}_n \mathbf{y}_n \mathbf{y}_n^{\top} \mathbf{H}_n}{\mathbf{y}_n^{\top} \mathbf{H}_n \mathbf{y}_n}.
+\]
+This is the original quasi-Newton scheme, now popularly known as the \textbf{Davidon-Fletcher-Powell} method. 
+
+The general scheme is given by
+\[
+    \mathbf{x}_{n+1} = \mathbf{x}_n - \alpha_n \mathbf{H}_n \nabla f(\mathbf{x}_n)
+\]
+coupled with the iterates $\{ \mathbf{H}_n \}$ which are given by
+\[
+    \mathbf{H}_{n+1} = \mathbf{H}_n - \frac{\mathbf{H}_n \mathbf{y}_n \mathbf{y}_n^{\top}\mathbf{H}_n}{\mathbf{y}_n^{\top} \mathbf{H}_n \mathbf{y}_n} + \frac{\mathbf{s}_n \mathbf{s}_n^{\top}}{\mathbf{y}_n^{\top} \mathbf{s}_n} + \bm{\phi}_n \left( \mathbf{y}_n^{\top} \mathbf{H}_n \mathbf{y}_n \right) \mathbf{w}_n \mathbf{w}_n^{\top}. 
+\]
+This family of algorithms is known as the \textbf{Broyden} family. Here, $\bm{\phi}_n \in [0,1]$ is a flexible parameter which can be chosen based on $\mathbf{y}_n, \mathbf{s}_n,$ and $\mathbf{w}_n$. The choice of $\bm{\phi}_n \equiv 0$ gives us the Davidon-Fletcher-Powell method. The choice $\bm{\phi}_n \equiv 1$ gives us the \textbf{Broyden-Fletcher-Goldfarb-Shanno} (\textbf{BFGS}) algorithm. 
+
+Note that $\mathbf{w}_n \perp \mathbf{y}_n$. Thus, any quantity proportional to $\mathbf{w}_n\mathbf{w}_n^{\top}$ can be added on the right hand side without affecting $\mathbf{s}_n$. The last term does however affect the convergence behaviour of the algorithm and gives practitioners and additional handle to tweak. 

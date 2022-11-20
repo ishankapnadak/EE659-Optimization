@@ -1,0 +1,91 @@
+\section{Lecture 18}
+
+\subsection*{Convex-Concave Procedure}
+
+This is sometimes also known as `Difference of Convex' (DC) programming. Let $f \colon \mathbb{R}^d \to \mathbb{R}$ be twice continuously differentiable such that the eigenvalues of $\nabla^2 f(\mathbf{x})$ are bounded in absolute value by some $K < \infty$ for all $\mathbf{x}$. Then, we may write 
+\[
+    f(\mathbf{x}) = \left( f(\mathbf{x}) + K\norm{\mathbf{x}}^2 \right) + \left( - K\norm{\mathbf{x}}^2 \right)
+\]
+as a sum of a convex and a concave function. More generally, consider the problem of minimizing $f = h + g$ where $h,g$ are continuously differentiable, $h$ is convex, and $g$ is concave. The convex-concave procedure solves
+\[
+    \nabla h(\mathbf{x}_{n+1}) = -\nabla g(\mathbf{x}_n)
+\]
+to get $\mathbf{x}_{n+1}$ from $\mathbf{x}_n$. By convexity, one has
+\begin{align*}
+    h(\mathbf{x}_n) &\geq h(\mathbf{x}_{n+1}) + \left\langle \nabla h(\mathbf{x}_{n+1}) , \mathbf{x}_n - \mathbf{x}_{n+1} \right\rangle \\
+    \implies h(\mathbf{x}_{n+1}) &\leq h(\mathbf{x}_n) - \left\langle \nabla h(\mathbf{x}_{n+1}) , \mathbf{x}_n - \mathbf{x}_{n+1} \right\rangle \\
+    &= h(\mathbf{x}_{n+1}) \leq h(\mathbf{x}_n) + \left\langle \nabla g(\mathbf{x}_n) , \mathbf{x}_n - \mathbf{x}_{n+1} \right\rangle \\
+    &= h(\mathbf{x}_{n+1}) \leq h(\mathbf{x}_n) - \left\langle \nabla g(\mathbf{x}_n) , \mathbf{x}_{n+1} - \mathbf{x}_n \right\rangle.
+\end{align*}
+Likewise by concavity, we get
+\[
+    g(\mathbf{x}_{n+1}) \leq g(\mathbf{x}_n) + \left\langle \nabla g(\mathbf{x}_n) , \mathbf{x}_{n+1} - \mathbf{x}_n \right\rangle.
+\]
+Adding the two, we get
+\[
+    f(\mathbf{x}_{n+1}) \leq f(\mathbf{x}_n). 
+\]
+Thus, this scheme guarantees monotone behaviour and the procedure thus stops at a minima. 
+
+\subsection*{Proximal Methods}
+
+Define the \textit{proximal} operator as
+\[
+    \prox_{\lambda f}(\mathbf{u}) \vcentcolon= \argmin_{\mathbf{x}} \left( f(\mathbf{x}) + \frac{1}{2\lambda} \norm{\mathbf{x} - \mathbf{u}}^2 \right).
+\]
+The proximal algorithm performs the following iteration.
+\[
+    \mathbf{x}_{n+1} = \prox_{\alpha_n f}(\mathbf{x}_n) = \argmin_{\mathbf{x}} \left( f(\mathbf{x}_n) + \frac{1}{2\alpha_n} \norm{\mathbf{x} - \mathbf{x}_n}^2 \right).
+\]
+By adding a quadratic penalty, one ensures that $\mathbf{x}_{n+1}$ does not move too far away from $\mathbf{x}_n$. The minimum condition at each iteration yields the following.
+\[
+    \mathbf{0} \in \partial \left( f(\cdot) + \frac{1}{2\alpha_n} \norm{\cdot - \mathbf{x}_n}^2 \right) \rvert_{\mathbf{x}_{n+1}} = \partial f(\mathbf{x}_{n+1}) + \frac{1}{\alpha_n} \left( \mathbf{x}_{n+1} - \mathbf{x}_n \right).
+\] 
+Thus, 
+\[
+    \mathbf{x}_{n+1} \in \mathbf{x}_n - \alpha_n \partial f(\mathbf{x}_{n+1}). 
+\]
+Where $\partial f$ denotes a subgradient of $f$. If the subgradient is in fact a gradient, then the above corresponds to the `backward Euler scheme' for solving 
+\[
+    \Dot{\mathbf{x}}(t) = -\nabla f(\mathbf{x}(t)).
+\]
+
+Let
+\[
+    \bm{\Psi}_f(\mathbf{u}) \vcentcolon= \inf_{\mathbf{x}} \left( f(\mathbf{x}_n) + \frac{1}{2} \norm{\mathbf{x} - \mathbf{u}}^2 \right).
+\]
+By the definition of the proximal operator, 
+\[
+    \bm{\Psi}_{\lambda f}(\mathbf{x}) = f\left( \prox_{\lambda f}(\mathbf{x}) \right) + \frac{1}{2\lambda} \norm{\mathbf{x} - \prox_{\lambda f}(\mathbf{x})}^2.
+\]
+By Danskin's theorem, we have
+\[
+    \nabla \bm{\Psi}_{\alpha_n f} (\mathbf{x}_n) = \frac{\mathbf{x}_{n+1} - \mathbf{x}_n}{\alpha_n}.
+\]
+That is,
+\[
+    \mathbf{x}_{n+1} = \mathbf{x}_n - \alpha_n \nabla \bm{\Psi}_{\alpha_n f} (\mathbf{x}_n)
+\]
+which is an explicit formulation. 
+
+\subsection*{Proximal Gradient Method}
+
+The \textit{proximal gradient} method deals with the minimization of functions of the form $\mathbf{x} \in \mathbb{R}^d \mapsto f(\mathbf{x}) + g(\mathbf{x})$ where $f \colon \mathbb{R}^d \to \mathbb{R}$ and $g \colon \mathbb{R}^d \to \mathbb{R} \cup \{\infty\}$. We further assume that $f$ is differentiable and that $\lim_{\norm{\mathbf{x}} \uparrow \infty} f(\mathbf{x}) = \lim_{\norm{\mathbf{x}} \uparrow \infty} g(\mathbf{x}) = \infty$. The algorithm is given by
+\[
+    \mathbf{x}_{n+1} = \prox_{\alpha_n g} \left( \mathbf{x}_n - \alpha_n \nabla f(\mathbf{x}_n) \right).
+\]  
+Since $g$ is allowed to take value $\infty$, we can impose the convex constraint $\mathbf{x} \in C$ for a closed convex set $C$ by taking $g(\mathbf{x}) = 0$ for $\mathbf{x} \in C$ and $g(\mathbf{x}) = \infty$ for $\mathbf{x} \notin C$. 
+
+This scheme again faces problems with `pinched' landscapes. We can modify the definition of the proximal operator by replacing the term $\frac{1}{2} \norm{\mathbf{x} - \mathbf{y}}^2$ by a more general distance measure $D(\mathbf{x}; \mathbf{y})$. A popular choice is the \textbf{Bregman divergence}
+\[
+    f(\mathbf{y}) - f(\mathbf{x}) - \left\langle \nabla f(\mathbf{x}), \mathbf{y} - \mathbf{x} \right\rangle \approx \frac{1}{2} (\mathbf{y} - \mathbf{x})^{\top} \nabla^2 f(\mathbf{x}) (\mathbf{y} - \mathbf{x})
+\]
+which leads to the popular \textbf{mirror descent algorithm}.
+
+\subsection*{Separable Problems}
+
+Consider minimizing $\sum_{i=1}^n f_i(x_i)$ subject to $\sum_{i} g(x_i) \leq 0$. If the Lagrange multiplier $\bm{\Lambda}$ is known, this splits into separable problems: minimize $f_i(x_i) + \bm{\Lambda}^{\top} g_i(x_i)$ for each $i$. This suggests the dual ascent scheme:
+\begin{align*}
+    x_{i,n} &= \argmin \left( f(\cdot) + \bm{\Lambda}_n^{\top} g_i(\cdot) \right) \quad \forall i, \\
+    \bm{\Lambda}_{n+1} &= \bm{\Lambda}_n + \alpha_n \left( \sum_i g_i(x_{i,n}) \right).
+\end{align*}

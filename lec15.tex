@@ -1,0 +1,36 @@
+\section{Lecture 15}
+
+We now prove the correctness of the quasi-Newton scheme. Suppose $\mathbf{H}_n$ is positive definite and $\alpha_n$ is chosen so that for $\mathbf{d}_n \vcentcolon= -\mathbf{H}_n \nabla f(\mathbf{x}_n)$, we have
+\[
+    \left\langle \nabla f(\mathbf{x}_n), \mathbf{d}_n \right\rangle < \left\langle \nabla f(\mathbf{x}_{n+1}), \mathbf{d}_n \right\rangle.
+\]
+This ensures that $\mathbf{H}_{n+1}$ is positive definite. If $\nabla f(\mathbf{x}_n) \neq \mathbf{0}$, then the above can be ensured by doing a line search till
+\[
+    \abs{\left\langle \nabla f(\mathbf{x}_n), \mathbf{d}_n \right\rangle} > \abs{\left\langle \nabla f(\mathbf{x}_{n+1}), \mathbf{d}_n \right\rangle}
+\]
+for example, by line minimization for which the right hand side is in fact zero. Then, $\alpha_n > 0$, $\mathbf{y}_n \neq \mathbf{0}$, and
+\[
+    \mathbf{s}_n^{\top} \mathbf{y}_n = \alpha_n \mathbf{d}_n^{\top} \left( \nabla f(\mathbf{x}_{n+1}) - \nabla f(\mathbf{x}_n) \right) > 0,
+\]
+so that all the denominators in the Broyden family are non-zero and $\mathbf{H}_{n+1}$ is well-defined. For $\mathbf{z} \neq \mathbf{0}$, let $\mathbf{a} \vcentcolon= \sqrt{\mathbf{H}_n} \mathbf{z}$, and let $\mathbf{b} \vcentcolon= \sqrt{\mathbf{H}_n} \mathbf{y}_n$. Then, 
+\begin{align*}
+    \mathbf{z}^{\top} \mathbf{H}_{n+1} \mathbf{z} &= \mathbf{z}^{\top}\mathbf{H}_n \mathbf{z} + \frac{\left(\mathbf{z}^{\top} \mathbf{s}_n\right)^2}{\mathbf{y}_n^{\top} \mathbf{s}_n} - \frac{\left( \mathbf{y}_n^{\top} \mathbf{H}_n \mathbf{z} \right)^2}{\mathbf{y}_n^{\top}\mathbf{H}_n\mathbf{y}_n} + \bm{\phi}_n \left( \mathbf{y}_n^{\top}\mathbf{H}_n\mathbf{y}_n \right) \left( \mathbf{w}_n^{\top} \mathbf{z} \right)^2 \\
+    &= \frac{\norm{\mathbf{a}}^2 \norm{\mathbf{b}}^2 - \left( \mathbf{a}^{\top}\mathbf{b} \right)^2}{\norm{\mathbf{b}}^2} + \frac{\left(\mathbf{z}^{\top} \mathbf{s}_n\right)^2}{\mathbf{y}_n^{\top} \mathbf{s}_n} + \bm{\phi}_n \left( \mathbf{y}_n^{\top}\mathbf{H}_n\mathbf{y}_n \right) \left( \mathbf{w}_n^{\top} \mathbf{z} \right)^2.
+\end{align*}
+We leave it as an exercise to show that this is in fact positive, which proves the positive definiteness of $\mathbf{H}_{n+1}$. 
+
+A `dual' scheme for updating the Hessians $\nabla^2 f(\mathbf{x}_n)$ rather than the inverse Hessian $(\nabla^2 f(\mathbf{x}_n))^{-1}$ can also be derived with $\mathbf{s}_n$ and $\mathbf{y}_n$ interchanged. This, however, requires matrix inversion which takes $\mathcal{O}(d^3)$ time. The current scheme can be reduced to $\mathcal{O}(d^2)$ using Cholesky decomposition. On the other hand, the dual scheme handles numerical errors better avoiding loss of positive definiteness better than the current scheme. 
+
+A related scheme is the \textbf{Gauss-Newton} method which minimizes the square of the linear approximation
+\[
+    f(\mathbf{x}) \approx f(\mathbf{x}_n) + \left\langle \nabla f(\mathbf{x}_n), \mathbf{x} - \mathbf{x}_n \right\rangle. 
+\]
+This, in principle, leads to
+\[
+    \mathbf{x}_{n+1} = \mathbf{x}_n - \alpha_n \left( \nabla f(\mathbf{x}_n) \nabla f(\mathbf{x}_n)^{\top} \right)^{-1} \nabla f(\mathbf{x}_n) f(\mathbf{x}_n). 
+\]
+However, the rank-1 matrix $\nabla f(\mathbf{x}_n) \nabla f(\mathbf{x}_n)^{\top}$ is not invertible. Thus, we instead use the scheme
+\[
+    \mathbf{x}_{n+1} = \mathbf{x}_n - \alpha_n \left( \nabla f(\mathbf{x}_n) \nabla f(\mathbf{x}_n)^{\top} + \bm{\Delta} \right)^{-1} \nabla f(\mathbf{x}_n) f(\mathbf{x}_n)
+\]
+where $\bm{\Delta}$ is a small positive definite matrix. The choice $\bm{\Delta} = \nu \mathbf{I}$ leads to the \textbf{Levenberg-Marquadt} method, which is extremely popular in neural networks literature. 

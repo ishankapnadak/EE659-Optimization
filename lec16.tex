@@ -1,0 +1,78 @@
+\section{Lecture 16}
+
+Here we consider solution schemes for the generalized \textbf{constrained optimization} problem, defined as 
+\begin{equation}
+    \label{constrained}
+    \text{Minimize } f(\mathbf{x}) \text{ on } C \vcentcolon= \left\{ \mathbf{x} \colon g_i(\mathbf{x}) \leq 0 \quad 1 \leq i \leq M \right\} \tag{P}
+\end{equation}
+
+\subsection*{Penalty Functions}
+
+Instead of solving \eqref{constrained}, one minimizes, without constrains, the function $f_{\lambda}(\mathbf{x}) \vcentcolon= f(\mathbf{x}) + \lambda F(\mathbf{x})$ where the \textit{penalty function} $F(\mathbf{x})$ is chosen such that as $\lambda \to \infty$, $\lambda F(\mathbf{x}) \to 0$ on $C$, and $\to \infty$ on $C^{\mathsf{c}}$ uniformly on closed bounded sets. Thus, if $\mathbf{x}^*(\lambda)$ is a minimizer of $f_{\lambda}$ then any limit point of $\mathbf{x}^*(\lambda)$ as $\lambda \uparrow \infty$ should be a solution to \eqref{constrained}. The solution to this \textit{unconstrained} problem thus approximates the solution of the original constrained problem. Typically, the optimal solution to \eqref{constrained} is on the boundary $\partial C$ but $\mathbf{x}^*(\lambda) \notin C$. Thus, $\mathbf{x}^*(\lambda)$ is not feasible and one generally takes the point closest to it in $C$ as an approximate solution. Usually, one choses $F$ to be continuously differentiable such that there is at least one minimizer of $f_{\lambda}$. A popular choice is
+\[
+    F(\mathbf{x}) \vcentcolon= \sum_{i=1}^M \left( g_i^+(\mathbf{x}) \right)^2.
+\]
+
+\subsection*{Barrier Functions}
+
+The penalty function method approximates the solution to \eqref{constrained} from `the outside'. Barrier function methods follow the same philosophy but approximate the solution to \eqref{constrained} from `the inside', that is, from the interior of $C$ (recall that this is denoted as $\interior{C}$). The idea is to minimize $f_{\mu}(\mathbf{x}) \vcentcolon= f(\mathbf{x}) + \mu F(\mathbf{x})$ on $\interior{C}$ with a \textit{barrier function} $F \colon \interior{C} \to \mathbb{R}$ satisfying $F(\mathbf{x}) \to \infty$ as $\mathbf{x} \to \partial C$ and $f_{\mu} \to f$ on $\interior{C}$ as $\mu \downarrow 0$. One popular example is the logarithmic barrier:
+\[
+    F(\mathbf{x}) \vcentcolon= \sum_{i=1}^M \log \left( - \frac{1}{g_i(\mathbf{x})} \right).
+\]
+
+Barrier function methods form an important class of interior point methods used in convex optimization. 
+
+\subsection*{Primal-Dual Methods}
+
+These schemes are based on the Lagrange multiplier rule, the idea being to find the saddle point in $(\mathbf{x}, \bm{\Lambda})$ of $f(\mathbf{x}) + \bm{\Lambda}^{\top} g(\mathbf{x})$. One such method is the \textbf{gradient ascent-descent} scheme that uses the coupled iteration:
+\begin{align*}
+    \mathbf{x}_{n+1} &= \mathbf{x}_n - \alpha_n \left( \nabla f(\mathbf{x}_n) + \sum_{i=1}^M \Lambda_{n,i} \nabla g_i(\mathbf{x}_n) \right) \\
+    \bm{\Lambda}_{n+1} &= \left[ \bm{\Lambda}_n + \alpha_n g(\mathbf{x}_n) \right]^+
+\end{align*}
+where $[ \,\cdot\, ]^+$ is applied component-wise. The differential equation counterpart is
+\begin{align*}
+    \Dot{\mathbf{x}}(t) &= - \nabla \left( f + \bm{\Lambda}(t)^{\top} g \right) (\mathbf{x}(t)), \\
+    \Dot{\bm{\Lambda}}(t) &= g(\mathbf{x}(t)). 
+\end{align*}
+constrained to remain in $\mathbb{R}^d \times \mathbb{R}^M_+$. For strictly convex $f,g$, let $(\mathbf{x}^*, \bm{\Lambda}^*)$ be the (unique) saddle point. Then, 
+\[
+    V(\mathbf{x}, \bm{\Lambda}) \vcentcolon= \frac{1}{2} \norm{\mathbf{x} - \mathbf{x}^*}^2 + \frac{1}{2} \norm{\bm{\Lambda} - \bm{\Lambda}^*}^2
+\]
+serves as a Lyapunov function. 
+
+\subsection*{Projected Gradient}
+
+Consider the hyperplane $\mathcal{H} \vcentcolon= \left\{ \mathbf{x} \in \mathbb{R}^d \colon \mathbf{Ax} = \mathbf{0}\right\}$. The projection of $\mathbf{x} \in \mathbb{R}^d$ onto $\mathcal{H}$ is given by
+\[
+    \Gamma (\mathbf{x}) \vcentcolon= \left( \mathbf{I} - \mathbf{A}^{\top} (\mathbf{AA}^{\top})^{-1} \mathbf{A} \right) \mathbf{x}. 
+\]
+Then, $\Gamma(\cdot)$ satisfies the following. 
+\begin{enumerate}
+    \item $\norm{\Gamma(\mathbf{x}) - \mathbf{x}} \leq \norm{\mathbf{y} - \mathbf{x}}$ for all $\mathbf{y} \in \mathcal{H}$.
+    \item $\Gamma(\mathbf{x}) = \mathbf{x}$ for all $\mathbf{x} \in \mathcal{H}$.
+    \item $\Gamma$ is idempotent. That is, $\Gamma \circ \Gamma = \Gamma$.
+\end{enumerate}
+
+A general idea of the algorithm is that we start with unconstrained minimization. The moment we step out of the feasible region, we ``pull'' the iterate back into the feasible region. Suppose $h(\mathbf{x}) = \mathbf{0}$ denotes the active constraints. Then, $\left\{ \mathbf{y} \colon \mathbf{x} + Dh(\mathbf{x}) (\mathbf{y} - \mathbf{x}) = \mathbf{0} \right\}$ is the tangent plane at $\mathbf{x}$. The iterative scheme proceeds by taking the projection of the gradient onto the constraint set. That is,
+\[
+   \mathbf{x}_{n+1} = \bm{\Phi} \left( \mathbf{x}_n - \alpha_n \left( \mathbf{I} - \mathbf{A}^{\top} (\mathbf{AA}^{\top})^{-1} \mathbf{A} \right) \nabla f(\mathbf{x}_n) \right) 
+\]
+where $\mathbf{A} = Dh(\mathbf{x}_n)$ and $\bm{\Phi}$ is a suitable map to pull the iterate back to the feasible region, given by $\bm{\Phi}(\mathbf{y}) \vcentcolon= \mathbf{y} + Dh(\mathbf{x}_n)^{\top} \bm{\alpha}$ such that $h(\bm{\Phi}(\mathbf{y})) = \mathbf{0}$. $\bm{\alpha}$ can be found by Newton-Raphson. 
+
+\subsection*{Reduced Gradient}
+
+This method belongs to a class of algorithms called \textit{feasible direction methods}. At each step, the algorithm seeks to find an update direction such that the resulting solution is adjudged beforehand to be feasible. This is in contrast to the projected gradient method where we first perform unconstrained minimization and then project the solution back to the feasible set. 
+
+Suppose we have linear constraints of the form $\mathbf{Ax} = \mathbf{b}$ where $\mathbf{A} = \begin{bmatrix} \mathbf{B} & \mathbf{C} \end{bmatrix}$ for some square non-singular matrix $\mathbf{B}$. Writing $\mathbf{x} = (\mathbf{y}, \mathbf{z})$ we may treat $\mathbf{z}$ as the independent variables and $\mathbf{y} = \mathbf{B}^{-1}(\mathbf{b} - \mathbf{Cz})$ as the dependent variables. We may then write
+\begin{align*}
+    \nabla f(\mathbf{y}, \mathbf{z}) &= \nabla f\left( \mathbf{B}^{-1}(\mathbf{b} - \mathbf{Cz}), \mathbf{z} \right) \\
+    &= \nabla^{\mathbf{z}} f(\mathbf{y}, \mathbf{z}) - \nabla^{\mathbf{y}} f(\mathbf{y}, \mathbf{z}) \mathbf{B}^{-1}\mathbf{C}. 
+\end{align*}
+
+This prompts us to use the following scheme. Write $\mathbf{x}_n = (\mathbf{y}_n, \mathbf{z}_n)$ where $\mathbf{y}_n, \mathbf{z}_n$ are the dependent and independent parts respectively. Let $D^{\mathbf{r}}$ denote the Jacobian matrix w.r.t variables $\mathbf{r}$. Then, we let
+\begin{align*}
+    \mathbf{z}_{n+1} &= \mathbf{z}_n - \alpha_n \left( \nabla^{\mathbf{z}} f(\mathbf{y}_n, \mathbf{z}_n) - \nabla^{\mathbf{y}} f(\mathbf{y}_n, \mathbf{z}_n) \underbrace{D^{\mathbf{y}} h(\mathbf{y}_n, \mathbf{z}_n)^{-1}}_{\mathbf{B}^{-1}} \underbrace{D^{\mathbf{z}} h(\mathbf{y}_n, \mathbf{z}_n)}_{\mathbf{C}}  \right), \\
+    \mathbf{y}_{n+1} &= \mathbf{y}_n - D^{\mathbf{y}} h(\mathbf{y}_n, \mathbf{z}_n)^{-1} D^{\mathbf{z}} h(\mathbf{y}_n, \mathbf{z}_n) \left( \mathbf{z}_{n+1} - \mathbf{z}_n \right).
+\end{align*}
+
+Note: In theory, we do not need to pull the iterate back into the feasible region. However, due to discretization errors, which are not intrinsic to the algorithm, we employ a similar Newton iteration to pull the iterate back to the feasible set.  

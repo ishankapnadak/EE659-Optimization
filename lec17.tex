@@ -1,0 +1,79 @@
+\section{Lecture 17}
+
+\subsection*{Conditional Gradient or Frank-Wolfe Method}
+
+This is another popular feasible directions method. Here, we wish to minimize $f$ over a closed bounded feasible set $C$. At the $(n+1)^{\text{th}}$ iteration, we compute the direction $\mathbf{d}_n$ that is maximally aligned with $-\nabla f(\mathbf{x}_n)$ subject to the given constraints. That is,
+\[
+    \mathbf{d}_n \vcentcolon= \argmin_{\mathbf{z} \in C} \left\langle \nabla f(\mathbf{x}_n), \mathbf{z} \right\rangle.
+\]  
+The iterate is then given by
+\[
+    \mathbf{x}_{n+1} = (1-\alpha_n) \mathbf{x}_n + \alpha_n \mathbf{d}_n. 
+\]
+We choose $\alpha_n \in (0,1)$ such that $\sum_n \alpha_n = \infty$. Also, note that $\mathbf{x}_n \in C \implies \mathbf{x}_{n+1} \in C$ by convexity. 
+
+\subsection*{Cutting Plane Method}
+
+Consider convex $f,g$. It suffices to consider a linear objective $f(\mathbf{x}) = \mathbf{c}^{\top}\mathbf{x}$, since we can equivalently consider the problem of minimizing $r \in \mathbb{R}$ subject to $f(\mathbf{x}) - r \leq 0$, $g(\mathbf{x}) \leq \mathbf{0}$. Suppose the minimum is attained. Start with an initial polytope $P_1$ containing $C$. At step $n$, given a polytope $P_n$ containing $C$, do the following:
+\begin{enumerate}
+    \item Find $\mathbf{w}_n \vcentcolon= \argmin_{P_n} \mathbf{c}^{\top} \mathbf{x}$. If $g(\mathbf{w}_n) \leq \mathbf{0}$, stop. If not, go to step 2.
+    \item Let $i^*_n \vcentcolon= \argmax_i g_i(\mathbf{w}_n)$. Then, $g_{i^*_n}(\mathbf{w}_n) > 0$. Set
+    \[
+        P_{n+1} = P_n \cup \left\{ \mathbf{x} \colon g_{i^*_n}(\mathbf{w}_n) + \left\langle \nabla g_{i^*_n}(\mathbf{w}_n), \mathbf{x} - \mathbf{w}_n \right\rangle \leq 0. \right\}
+    \]
+    Repeat till convergence. 
+\end{enumerate}
+
+It is easy to see that $\mathbf{w}_n \notin P_{n+1}$. Thus, the next polytope excludes the current minimizer. Also, for $\mathbf{x} \in C$, 
+\[
+    0 \geq g_{i^*_n}(\mathbf{x}) \geq g_{i^*_n}(\mathbf{w}_n) + \left\langle \nabla g_{i^*_n}(\mathbf{w}_n), \mathbf{x} - \mathbf{w}_n \right\rangle
+\]
+which implies that $C \subseteq P_{n+1}$. Thus, the next polytope retains the entire constraint set. 
+
+Now, suppose that $\mathbf{w}_{n_k} \to \mathbf{w}^*$ where $n_k$ are such that $i^*_{n_k} \equiv \hat{i}$ (say). Since there are only finite many indices, such a subsequence must exist. Moreover, convergence follows by Bolzano-Weierstrass. Then, we have
+\[
+    \nabla g_{\hat{i}}(\mathbf{w}_{n_k}) \to \nabla g_{\hat{i}}(\mathbf{w}^*)
+\]
+implying $\sup_k \norm{\nabla g_{\hat{i}}(\mathbf{w}_{n_k})} < \infty$. Then, 
+\begin{align*}
+    g_{\hat{i}}\left( \mathbf{w}_{n+m} \right) &\leq \left\langle -\nabla g_{\hat{i}}(\mathbf{w}_{n_k}),   \mathbf{w}_{n+m} - \mathbf{w}_n \right\rangle \\
+    &\leq \norm{\nabla g_{\hat{i}}(\mathbf{w}_{n_k})} \norm{\mathbf{w}_{n+m} - \mathbf{w}_n} \\
+    \implies g_{\hat{i}}(\mathbf{w}^*) &\leq 0 \quad (\text{on letting } k \uparrow \infty) \\
+    \implies g_i(\mathbf{w}^*) &\leq 0 \quad \forall i. 
+\end{align*}
+
+Thus, $\mathbf{w}^*$ is feasible. Optimality follows by a limiting argument. 
+
+\subsection*{Two Timescale Schemes}
+
+This is the coupled iteration
+\begin{align*}
+    \mathbf{x}_{n+1} &= \mathbf{x}_n + \alpha_n h(\mathbf{x}_n, \mathbf{y}_n), \\
+    \mathbf{y}_{n+1} &= \mathbf{y}_n + \beta_n g(\mathbf{x}_n, \mathbf{y}_n).
+\end{align*}
+Here $h,g$ are assumed to be Lipschitz and $\alpha_n, \beta_n > 0$ satisfy $\sum_n \alpha_n = \sum_n \beta_n = \infty$, and $\beta_n = o(\alpha_n)$. The latter condition ensures that the second iteration moves at a slower time scale than the first one, and is approximately constant (to be precise, very slowly-varying) on the timescale of the first iteration. Thus, the first iteration tracks the ODE
+\[
+    \Dot{\mathbf{x}}^{\prime}(t) = h( \mathbf{x}^{\prime}(t), \mathbf{y})
+\]
+for $\mathbf{y} \approx \mathbf{y}(t)$. Suppose this $\mathbf{x}^{\prime}(t)$ converges to a unique $\Lambda(\mathbf{y})$ where $\Lambda(\cdot)$ is Lipschitz. This implies that $\mathbf{x}_n - \Lambda(\mathbf{y}_n) \to 0$ asymptotically. Thus, the second iteration tracks the ODE
+\[
+    \Dot{\mathbf{y}}^{\prime}(t) = g\left( \Lambda(\mathbf{y}^{\prime}(t)), \mathbf{y}^{\prime}(t) \right).
+\]
+Suppose this converges to some $\mathbf{y}^*$. Then, the coupled iterate converges to $(\Lambda(\mathbf{y}^*), \mathbf{y}^*)$. Thus, $\{\mathbf{x}_n\}$ sees $\{\mathbf{y}_n\}$ as quasi-static, and $\{\mathbf{y}_n\}$ sees $\{\mathbf{x}_n\}$ as quasi-equilibriated. Two timescale schemes are frequently used to replace a subroutine on a concurrent iteration. One example is the use of two timescales in actor-critic methods in reinforcement learning.
+
+\subsection*{Homotopy Methods}
+
+Let $f,g \colon \mathbb{R}^d \to \mathbb{R}$. $f$ is said to be \textit{homotopic} to $g$ if there exists a continuous deformation $F \colon \mathbb{R}^d \times [0,1] \to \mathbb{R}$ such that 
+\[
+    F(\mathbf{x},0) = g(\mathbf{x}), F(\mathbf{x},1) = f(\mathbf{x}) \quad \text{for all } \mathbf{x} \in \mathbb{R}^d. 
+\]
+A standard example is the map
+\[
+    F(\mathbf{x},t) = (1-t) g(\mathbf{x}) + t f(\mathbf{x}).
+\]
+To find the minimizer of $f$, you start with a strictly convex curve $g$ and slowly deform it to $f$. Let $\mathbf{x}_0$ be the minimizer of $g$. We track the solution $\mathbf{x}^*(t), t \in [0,1]$ of $\nabla_{\mathbf{x}} F(\mathbf{x},t) = \mathbf{0}$ with the initial condition $\mathbf{x}^*(0) = \mathbf{x}_0$, as $t \to 1$. This gives us the two timescale iteration
+\begin{align*}
+    \mathbf{x}_{n+1} &= \mathbf{x}_n - \alpha_n \left( \nabla_{\mathbf{x}}^2 F(\mathbf{x}_n, t_n) \right)^{-1} \nabla_{\mathbf{x}} F(\mathbf{x}_n, t_n), \\
+    t_{n+1} &= t_n + \beta_n \quad (\text{slowly increase to } 1). 
+\end{align*}
+This guarantees a continuous curve to a critical point of $f$ using a parametric form of Sard's Theorem. 
